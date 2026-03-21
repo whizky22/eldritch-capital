@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eldritch Capital</title>
+  <meta name="description" content="Exploring esoteric investment ideas" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="site-nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-logo">
+        <img src="https://www.eldritch.capital/content/images/2026/01/ec-logo-wide-zoom.jpg" alt="Eldritch Capital" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="thesis.html">Thesis</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <a href="#subscribe" class="nav-subscribe">Subscribe</a>
+    </div>
+  </nav>
+
+  <!-- ===== POST GRID ===== -->
+  <main class="home-feed">
+    <div class="post-grid">
+
+      <!-- Post 1: Featured -->
+      <a href="posts/flickering-lanterns-guide-my-way.html" class="post-card featured">
+        <div class="post-card-content">
+          <div class="post-card-tag">Market Views</div>
+          <h2 class="post-card-title">Flickering lanterns guide my way</h2>
+          <p class="post-card-excerpt">One of my main reasons for creating this is to force self-reflection and sharpen my own investment views. I've found writing the best way to structure my thoughts, and be forced to think them through for (even just the threat of) an external audience.</p>
+          <div class="post-card-meta">By The Archivist</div>
+        </div>
+      </a>
+
+      <!-- Post 2 -->
+      <a href="posts/esoteric-investments.html" class="post-card">
+        <div class="post-card-tag">Artifacts</div>
+        <h2 class="post-card-title">Esoteric investments</h2>
+        <p class="post-card-excerpt">This is Eldritch Capital. The intention is to delve into weird, esoteric, and underexplored investment opportunities. This will involve analysis of macro, politics, philosophy, ideologies, and technologies.</p>
+        <div class="post-card-meta">By The Archivist</div>
+      </a>
+
+      <!--
+        ===== ADD NEW POST CARDS HERE =====
+        Copy and paste the block below, then fill in the details:
+
+        <a href="posts/your-post-filename.html" class="post-card">
+          <div class="post-card-tag">Category</div>
+          <h2 class="post-card-title">Your Post Title</h2>
+          <p class="post-card-excerpt">A short excerpt or description of the post...</p>
+          <div class="post-card-meta">By The Archivist &middot; Month Year</div>
+        </a>
+      -->
+
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="site-footer-top">
+      <a href="index.html" class="footer-logo">
+        <img src="https://www.eldritch.capital/content/images/2026/01/ec-logo-wide-zoom.jpg" alt="Eldritch Capital" />
+      </a>
+      <div class="footer-center">Eldritch Capital</div>
+      <div class="footer-right">&copy; 2026 Eldritch Capital</div>
+    </div>
+
+    <div class="subscribe-section" id="subscribe">
+      <h2>Eldritch Capital</h2>
+      <p>Esoteric investment ideas and concepts</p>
+      <form class="subscribe-form" onsubmit="handleSubscribe(event)">
+        <input type="email" placeholder="jamie@example.com" required />
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+
+    <div class="disclaimer">
+      Views are my own. This is not investment advice. This venture is personal and unaffiliated with any professional role.
+    </div>
+  </footer>
+
+  <script>
+    function handleSubscribe(e) {
+      e.preventDefault();
+      const email = e.target.querySelector('input').value;
+      alert('Thanks for subscribing! We\'ll be in touch.');
+      e.target.reset();
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YOUR POST TITLE — Eldritch Capital</title>
+  <meta name="description" content="A short description of your post." />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="site-nav">
+    <div class="nav-left">
+      <a href="../index.html" class="nav-logo">
+        <img src="https://www.eldritch.capital/content/images/2026/01/ec-logo-wide-zoom.jpg" alt="Eldritch Capital" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="../index.html">Overview</a></li>
+        <li><a href="../thesis.html">Thesis</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <a href="#subscribe" class="nav-subscribe">Subscribe</a>
+    </div>
+  </nav>
+
+  <!-- ===== ARTICLE ===== -->
+  <main>
+    <article class="article-wrapper">
+
+      <!-- Category tag — e.g. "Market Views", "Artifacts", "Macro", "Portfolio", "Thesis" -->
+      <div class="article-tag">CATEGORY</div>
+
+      <!-- Post title -->
+      <h1 class="article-title">Your Post Title Here</h1>
+
+      <!-- Author and date -->
+      <div class="article-meta">By <span>The Archivist</span> &middot; Month Year</div>
+
+      <!-- Optional: hero image. Remove this block if no image. -->
+      <!--
+      <div class="article-image">
+        <img src="../images/your-image.jpg" alt="Description of image" />
+      </div>
+      -->
+
+      <!-- ===== POST CONTENT ===== -->
+      <div class="article-content">
+
+        <p>Your opening paragraph goes here.</p>
+
+        <p>Continue writing your post. Each paragraph is wrapped in &lt;p&gt; tags.</p>
+
+        <!-- Subheading -->
+        <h2>A Section Heading</h2>
+
+        <p>Content under this section heading.</p>
+
+        <!-- Smaller subheading -->
+        <h3>A Smaller Heading</h3>
+
+        <p>More content here.</p>
+
+        <!-- Numbered list -->
+        <ol>
+          <li><strong>Point one.</strong> Explanation of this point.</li>
+          <li><strong>Point two.</strong> Explanation of this point.</li>
+          <li><strong>Point three.</strong> Explanation of this point.</li>
+        </ol>
+
+        <!-- Bullet list -->
+        <ul>
+          <li>Item one</li>
+          <li>Item two</li>
+          <li>Item three</li>
+        </ul>
+
+        <!-- Blockquote -->
+        <blockquote>
+          A quote or highlighted passage goes here.
+        </blockquote>
+
+        <p>Closing thoughts.</p>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="site-footer-top">
+      <a href="../index.html" class="footer-logo">
+        <img src="https://www.eldritch.capital/content/images/2026/01/ec-logo-wide-zoom.jpg" alt="Eldritch Capital" />
+      </a>
+      <div class="footer-center">Eldritch Capital</div>
+      <div class="footer-right">&copy; 2026 Eldritch Capital</div>
+    </div>
+
+    <div class="subscribe-section" id="subscribe">
+      <h2>Eldritch Capital</h2>
+      <p>Esoteric investment ideas and concepts</p>
+      <form class="subscribe-form" onsubmit="handleSubscribe(event)">
+        <input type="email" placeholder="jamie@example.com" required />
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+
+    <div class="disclaimer">
+      Views are my own. This is not investment advice. This venture is personal and unaffiliated with any professional role.
+    </div>
+  </footer>
+
+  <script>
+    function handleSubscribe(e) {
+      e.preventDefault();
+      alert('Thanks for subscribing!');
+      e.target.reset();
+    }
+  </script>
+
+</body>
+</html>

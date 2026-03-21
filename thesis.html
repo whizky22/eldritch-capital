@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thesis — Eldritch Capital</title>
+  <meta name="description" content="You step foot into the barrow." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="site-nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-logo">
+        <img src="https://www.eldritch.capital/content/images/2026/01/ec-logo-wide-zoom.jpg" alt="Eldritch Capital" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="thesis.html">Thesis</a></li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <a href="#subscribe" class="nav-subscribe">Subscribe</a>
+    </div>
+  </nav>
+
+  <!-- ===== ARTICLE ===== -->
+  <main>
+    <article class="article-wrapper">
+
+      <h1 class="article-title">You step foot into the barrow</h1>
+      <div class="article-meta">Eldritch Capital</div>
+
+      <div class="article-content">
+
+        <p>Eldritch Capital was founded by a Scottish macro investor. For now, it is a collection of ramblings. The intention is to publish thoughts and analysis on investing, unconventionally.</p>
+
+        <p>This is a truth seeking exercise, parting the veil to identify and understand true market opportunities and drivers. It may evolve.</p>
+
+        <p>Common themes will be: thematic investing, our impending sci-fi future, political landscape, and portfolio construction.</p>
+
+        <p>Views are my own. This is not investment advice. This venture is a personal one and unaffiliated with any professional role.</p>
+
+      </div>
+    </article>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="site-footer-top">
+      <a href="index.html" class="footer-logo">
+        <img src="https://www.eldritch.capital/content/images/2026/01/ec-logo-wide-zoom.jpg" alt="Eldritch Capital" />
+      </a>
+      <div class="footer-center">Eldritch Capital</div>
+      <div class="footer-right">&copy; 2026 Eldritch Capital</div>
+    </div>
+
+    <div class="subscribe-section" id="subscribe">
+      <h2>Eldritch Capital</h2>
+      <p>Esoteric investment ideas and concepts</p>
+      <form class="subscribe-form" onsubmit="handleSubscribe(event)">
+        <input type="email" placeholder="jamie@example.com" required />
+        <button type="submit">Subscribe</button>
+      </form>
+    </div>
+
+    <div class="disclaimer">
+      Views are my own. This is not investment advice. This venture is personal and unaffiliated with any professional role.
+    </div>
+  </footer>
+
+  <script>
+    function handleSubscribe(e) {
+      e.preventDefault();
+      alert('Thanks for subscribing!');
+      e.target.reset();
+    }
+  </script>
+
+</body>
+</html>
