@@ -1,1 +1,52 @@
-PLACEHOLDER_WILL_FAIL
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1814"/>
+      <stop offset="55%" stop-color="#12100e"/>
+      <stop offset="100%" stop-color="#0a0908"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="78%" r="45%">
+      <stop offset="0%" stop-color="#d4a017" stop-opacity="0.45"/>
+      <stop offset="70%" stop-color="#d4a017" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="torch" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#ffe7a0"/>
+      <stop offset="35%" stop-color="#f0a020"/>
+      <stop offset="100%" stop-color="#f0a020" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="640" fill="url(#bg)"/>
+  <rect x="40" y="0" width="220" height="320" fill="#1e3a4c"/>
+  <circle cx="150" cy="90" r="48" fill="#c9a227"/>
+  <rect x="95" y="145" width="38" height="90" fill="#3d2a6e"/>
+  <rect x="155" y="145" width="38" height="90" fill="#2d5a3a"/>
+  <path d="M40 320 Q150 280 260 320 L260 0 L40 0 Z" fill="#1a3040" opacity="0.35"/>
+  <rect x="0" y="0" width="80" height="640" fill="#2a2620"/>
+  <rect x="1120" y="0" width="80" height="640" fill="#2a2620"/>
+  <rect x="180" y="0" width="70" height="640" fill="#323028"/>
+  <rect x="950" y="0" width="70" height="640" fill="#323028"/>
+  <path d="M300 640 L300 220 Q300 140 380 140 L420 140 Q500 140 500 220 L500 640" fill="#1c1a16" stroke="#3a3530" stroke-width="3"/>
+  <path d="M700 640 L700 200 Q700 120 780 120 L820 120 Q900 120 900 200 L900 640" fill="#1c1a16" stroke="#3a3530" stroke-width="3"/>
+  <circle cx="400" cy="380" r="8" fill="#6ecb7a"/>
+  <circle cx="400" cy="430" r="7" fill="#5bb86a"/>
+  <circle cx="400" cy="480" r="6" fill="#4aa35c"/>
+  <circle cx="800" cy="360" r="8" fill="#6ecb7a"/>
+  <circle cx="800" cy="420" r="7" fill="#5bb86a"/>
+  <ellipse cx="600" cy="560" rx="280" ry="90" fill="url(#glow)"/>
+  <ellipse cx="600" cy="545" rx="210" ry="70" fill="none" stroke="#c9a227" stroke-width="3"/>
+  <ellipse cx="600" cy="545" rx="150" ry="48" fill="none" stroke="#c9a227" stroke-width="2"/>
+  <ellipse cx="600" cy="545" rx="80" ry="26" fill="none" stroke="#e8c547" stroke-width="2"/>
+  <line x1="390" y1="545" x2="810" y2="545" stroke="#c9a227" stroke-width="1.5"/>
+  <line x1="600" y1="475" x2="600" y2="615" stroke="#c9a227" stroke-width="1.5"/>
+  <line x1="460" y1="500" x2="740" y2="590" stroke="#a88420" stroke-width="1"/>
+  <line x1="740" y1="500" x2="460" y2="590" stroke="#a88420" stroke-width="1"/>
+  <circle cx="600" cy="545" r="14" fill="#2a1a4a"/>
+  <circle cx="520" cy="545" r="18" fill="#1a4a4a"/>
+  <circle cx="680" cy="545" r="18" fill="#3a1a4a"/>
+  <circle cx="230" cy="210" r="55" fill="url(#torch)"/>
+  <circle cx="970" cy="210" r="55" fill="url(#torch)"/>
+  <rect x="218" y="248" width="24" height="70" fill="#4a4030"/>
+  <rect x="958" y="248" width="24" height="70" fill="#4a4030"/>
+</svg>
