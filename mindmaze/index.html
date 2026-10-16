@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Archivist's Labyrinth — Eldritch Capital</title>
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="../style.css" />
+<link rel="stylesheet" href="game.css" />
+</head>
+<body>
+<nav class="site-nav">
+  <div class="nav-left">
+    <a href="../index.html" class="nav-logo"><img src="../images/ec-logo-wide-zoom.jpg" alt="Eldritch Capital" /></a>
+    <ul class="nav-links">
+      <li><a href="../index.html">Overview</a></li>
+      <li><a href="../thesis.html">Thesis</a></li>
+    </ul>
+  </div>
+</nav>
+<main class="mm-wrap">
+  <h1 class="mm-title">The Archivist's Labyrinth</h1>
+  <div class="mm-hud"><span id="hud-lives"></span><span id="hud-score"></span><span id="hud-steps"></span><span id="hud-room"></span></div>
+  <div class="mm-scene"><svg id="scene" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet"></svg>
+    <div id="overlay" class="mm-overlay hidden"></div></div>
+  <div id="jester" class="mm-jester"></div>
+  <div id="quiz" class="mm-quiz"></div>
+  <div class="mm-mapbox"><div class="mm-maplabel">Map — <span class="lg you">you</span> <span class="lg seen">visited</span> <span class="lg exit">exit</span></div>
+    <svg id="map" viewBox="0 0 120 120"></svg></div>
+</main>
+<footer>
+  <div class="site-footer-top">
+    <a href="../index.html" class="footer-logo"><img src="../images/ec-logo-wide-zoom.jpg" alt="Eldritch Capital" /></a>
+    <div class="footer-center">Eldritch Capital</div>
+    <div class="footer-right">&copy; 2026 Eldritch Capital</div>
+  </div>
+</footer>
+<script src="game.js"></script>
+</body>
+</html>
