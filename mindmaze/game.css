@@ -26,3 +26,24 @@
 .lg::before{content:"";display:inline-block;width:10px;height:10px;margin:0 3px 0 6px;vertical-align:-1px;border-radius:2px}
 .lg.you::before{background:#ffd86b}.lg.seen::before{background:#5a4a7a}.lg.exit::before{background:#3fbf7f}
 #map{width:min(260px,70vw);height:auto;background:#07050c;border:1px solid rgba(255,255,255,.08);border-radius:4px}
+/* painted edition */
+.mm-scene{aspect-ratio:16/9}
+#scene{height:100%}
+.door .hit{fill:transparent;stroke:transparent;stroke-width:.6;transition:all .2s}
+.door.locked .hit{fill:rgba(10,5,0,.35)}
+.door .bar{stroke:#3a3632;stroke-width:.7;stroke-linecap:round;filter:drop-shadow(0 0 .3px #000)}
+.door .rune{fill:#b8862f;font-size:3.2px;font-family:Georgia,serif;opacity:.85}
+.door.open:hover .hit,.door.open:focus .hit{fill:rgba(255,210,110,.18);stroke:#ffd86b;filter:drop-shadow(0 0 1.5px #ffd86b)}
+.door.open:hover,.door.open:focus{filter:none}
+.mm-jester{position:relative;background:#f1e6c8;color:#2a1a0c;font-style:italic;border-radius:10px;padding:10px 14px;margin:14px 2px 12px;box-shadow:0 2px 8px rgba(0,0,0,.6)}
+.mm-jester::before{content:"";position:absolute;top:-9px;left:28px;border:9px solid transparent;border-top:0;border-bottom-color:#f1e6c8}
+.mm-jester b{font-style:normal;color:#7a1f1f;font-family:Georgia,serif}
+.mm-quiz{position:relative;background:radial-gradient(ellipse at center,#f3e7c6 0%,#e4d1a1 70%,#c9ae74 100%);color:#2a1a0c;border:none;border-radius:4px;padding:22px 20px;margin:0 8px;box-shadow:inset 0 0 30px rgba(110,70,20,.45),0 4px 14px rgba(0,0,0,.6);font-family:Georgia,serif}
+.mm-quiz::before,.mm-quiz::after{content:"";position:absolute;left:-10px;right:-10px;height:14px;border-radius:7px;background:linear-gradient(#8a5a2a,#c99a5a 45%,#6a4018)}
+.mm-quiz::before{top:-7px}.mm-quiz::after{bottom:-7px}
+.mm-quiz .cat{color:#7a1f1f}
+.mm-quiz .q{color:#2a1a0c;font-size:17px}
+.mm-quiz .mm-btn{background:rgba(255,248,225,.55);color:#2a1a0c;border-color:#8a6a3a;font-family:Georgia,serif}
+.mm-quiz .mm-btn:hover{background:rgba(255,248,225,.9);border-color:#7a1f1f}
+.mm-quiz .mm-btn.good{background:#bfe0b0;border-color:#3a7a3a}
+.mm-quiz .mm-btn.bad{background:#e8b0a8;border-color:#a33}

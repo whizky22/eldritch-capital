@@ -55,6 +55,22 @@ var JEST={
  bad:["Wrong! The torches flicker with laughter.","Tsk. A life slips away into the margins.","Incorrect. The jester does a little dance at your expense.","No, no, NO. Try another, if you dare."],
  open:["You've solved this one already. Choose your door.","Back again? The room remembers you."]
 };
+var ROOMS={
+"great-hall":{host:"jester",L:[9,33,9,51],B:[46,54,9,24],R:[82,35,9,49]},
+"library":{host:"maiden",L:[10,28,10,52],B:[48,49,9,28],R:[82,30,9,52]},
+"alchemist":{host:"witch",L:[15,27,7,52],B:[43,31,12,41],R:[83,20,9,62]},
+"dungeon":{host:"gargoyle",L:[10,38,9,47],B:[43,38,13,33],R:[82,40,8,45],F:[39,83,22,14],trap:1},
+"chapel":{host:"monk",L:[11,25,9,58],B:[46,42,11,35],R:[81,26,9,57]},
+"banquet":{host:"jester",L:[4,20,8,54],B:[43,30,16,30],R:[88,20,8,54]},
+"throne":{host:"maiden",L:[5,25,12,43],B:[41,8,18,52],R:[76,25,10,43]},
+"crypt":{host:"witch",L:[6,30,10,50],B:[45,38,12,30],R:[87,32,9,48]}};
+var RNAMES=Object.keys(ROOMS),DMAP={N:"B",W:"L",E:"R",S:"F"},DEFF=[40,82,20,13];
+var HOSTS={
+jester:{name:"The Jester",enter:["Hee hee! Another fool wanders in. Answer, or dangle with me!","Upside down, inside out — which way is the exit? I shan't tell!","Ooh, a fresh head for my collection of bells."],good:["Pah! Lucky guess. The doors are yours.","Correct?! Ugh. Off you go, clever-clogs."],bad:["WRONG! Ha! I'll ring a bell for every life you lose!","Oh dear, oh dear. Your skull would make a lovely rattle."],open:["Back so soon? I missed laughing at you."]},
+maiden:{name:"The Pale Maiden",enter:["I have waited here so long… answer me, and I may let you pass.","My candle burns low. Will you answer before it dies?","They all forgot me. Do not forget this question."],good:["Yes… you remember. Go, before the dark notices.","Truly answered. The doors sigh open for you."],bad:["No… that is what the others said, before they vanished.","Wrong. Another year added to my waiting."],open:["You returned… no one ever returns."]},
+witch:{name:"The Witch",enter:["Heh-heh-heh! Into the pot, or into the riddle? Choose!","Eye of newt, toe of frog, and one wee question for a lost little dog.","The bubbles whisper your name, dearie. Answer quick!"],good:["Cackle! Clever, clever. The cauldron spares you.","Right answer, wrong castle, ha! The doors are open."],bad:["Ooh, wrong! That'll cost you a life… and maybe a toe.","Heh! The cauldron thanks you for the ingredient."],open:["Still wandering, dearie? Doors are open. Mind the toads."]},
+monk:{name:"The Hooded Monk",enter:["Silence. Here, knowledge is the only prayer.","The lantern reveals truth to those who answer truly.","Kneel, pilgrim, and be tested."],good:["It is written. The way is open.","Wisdom is its own absolution. Go."],bad:["Error is a penance. Pay it.","The candles gutter. A life is taken in tithe."],open:["Peace. You have already been judged here."]},
+gargoyle:{name:"The Red Gargoyle",enter:["GRRR. Answer. Or I eat.","Stone wings. Stone teeth. Stone patience. ANSWER.","Many come down here. Few go up. Riddle time."],good:["Hmph. Right. Go. Before I change mind.","Correct. Trapdoor and doors open. Bah."],bad:["WRONG. Crunch. One life gone.","Hrrk. Bad answer. Tasty adventurer."],open:["You again. Doors open. Go away."]}};
 var N=6,DIRS={N:[0,-1],S:[0,1],E:[1,0],W:[-1,0]},OPP={N:"S",S:"N",E:"W",W:"E"};
 var PAL=[["#2b2236","#3d3150","#1a1424"],["#1f2e2a","#2f4640","#121c19"],["#33241c","#4a3528","#1d1410"],["#22283a","#333c56","#141824"],["#2e1f2b","#46303f","#1b1219"],["#2a2a22","#3f3f33","#18180f"]];
 var S,rng;
@@ -63,7 +79,7 @@ function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function shuffle(a,r){r=r||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function key(x,y){return x+","+y;}
 function genMaze(){
- var cells={},x,y;for(y=0;y<N;y++)for(x=0;x<N;x++)cells[key(x,y)]={x:x,y:y,d:{},pal:Math.floor(rng()*PAL.length)};
+ var cells={},x,y;for(y=0;y<N;y++)for(x=0;x<N;x++)cells[key(x,y)]={x:x,y:y,d:{},pal:Math.floor(rng()*PAL.length),img:RNAMES[Math.floor(rng()*RNAMES.length)]};
  var sx=Math.floor(rng()*N),sy=N-1,stack=[[sx,sy]],seen={};seen[key(sx,sy)]=1;
  while(stack.length){var c=stack[stack.length-1],opts=shuffle(Object.keys(DIRS),rng).filter(function(d){var nx=c[0]+DIRS[d][0],ny=c[1]+DIRS[d][1];return nx>=0&&ny>=0&&nx<N&&ny<N&&!seen[key(nx,ny)];});
   if(!opts.length){stack.pop();continue;}var d=opts[0],nx=c[0]+DIRS[d][0],ny=c[1]+DIRS[d][1];
@@ -78,20 +94,21 @@ function newGame(){
  var m=genMaze();
  S={m:m,cur:m.start,lives:5,score:0,steps:0,visited:{},solved:{},deck:shuffle(Q.map(function(_,i){return i;})),qi:0,q:null,over:false,seed:seed};
  S.visited[m.start]=1;enter(true);
- overlay("Enter the Labyrinth","The Archivist has locked his secrets deep in the castle. Answer each chamber's riddle to unlock its doors, then click a door in the scene to pass through. Find the green exit on the map. You have five lives.",["Begin",function(){hideOverlay();}]);
+ overlay("Enter the Labyrinth","The Archivist has locked his secrets deep in the castle. Answer each chamber's riddle to unlock its doors, then click a door in the scene to pass through. Doors lie left, right and ahead, and sometimes a trapdoor below (to the south on the map). Find the green exit. You have five lives.",["Begin",function(){hideOverlay();}]);
 }
 function nextQ(){if(S.qi>=S.deck.length){S.deck=shuffle(S.deck);S.qi=0;}var raw=Q[S.deck[S.qi++]];var o=raw[2].map(function(t,i){return{t:t,c:i===raw[3]};});return{cat:raw[0],text:raw[1],opts:shuffle(o)};}
 function enter(first){
  var c=S.m.cells[S.cur];
  if(S.cur===S.m.exit){render();return win();}
- if(S.solved[S.cur]){S.q=null;say(pick(JEST.open));}else{S.q=nextQ();say(first?"Welcome, wanderer. The jester will be your… guide.":pick(JEST.enter));}
+ var H=HOSTS[ROOMS[c.img].host];if(S.solved[S.cur]){S.q=null;say(pick(H.open));}else{S.q=nextQ();say(pick(H.enter));}
  render();
 }
-function say(t){document.getElementById("jester").textContent="🃏 "+t;}
+function host(){return HOSTS[ROOMS[S.m.cells[S.cur].img].host];}
+function say(t,who){var j=document.getElementById("jester");j.innerHTML="";var n=document.createElement("b");n.textContent=(who||(S&&S.m?host().name:"The Jester"))+":";j.appendChild(n);j.appendChild(document.createTextNode(" “"+t+"”"));}
 function answer(i,btn){
  if(S.over||!S.q)return;var o=S.q.opts[i];
- if(o.c){S.solved[S.cur]=1;S.score+=100;say(pick(JEST.good));btn.classList.add("good");setTimeout(render,500);}
- else{S.lives--;S.score=Math.max(0,S.score-25);btn.classList.add("bad");say(pick(JEST.bad));
+ if(o.c){S.solved[S.cur]=1;S.score+=100;say(pick(host().good));btn.classList.add("good");setTimeout(render,500);}
+ else{S.lives--;S.score=Math.max(0,S.score-25);btn.classList.add("bad");say(pick(host().bad));
   if(S.lives<=0){render();return lose();}setTimeout(function(){S.q=nextQ();render();},700);}
  hud();
 }
@@ -108,31 +125,25 @@ function hud(){
 var NS="http://www.w3.org/2000/svg";
 function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
 function drawScene(){
- var svg=document.getElementById("scene");svg.innerHTML="";var c=S.m.cells[S.cur],p=PAL[c.pal],open=!!S.solved[S.cur],isExit=S.cur===S.m.exit;
- var defs=el("defs",{},svg);var g=el("radialGradient",{id:"glow",cx:"50%",cy:"40%",r:"70%"},defs);el("stop",{offset:"0%","stop-color":"#ffcf7a","stop-opacity":".25"},g);el("stop",{offset:"100%","stop-color":"#000","stop-opacity":"0"},g);
- var pat=el("pattern",{id:"brick",width:"40",height:"20",patternUnits:"userSpaceOnUse"},defs);el("rect",{width:40,height:20,fill:p[1]},pat);el("path",{d:"M0 0H40M0 10H40M20 0V10M0 10V20M40 10V20",stroke:p[2],"stroke-width":"1.2",fill:"none"},pat);
- // back wall, side walls, floor, ceiling
- el("rect",{x:0,y:0,width:400,height:260,fill:p[2]},svg);
- el("polygon",{points:"0,0 400,0 320,50 80,50",fill:p[0]},svg);
- el("polygon",{points:"0,260 400,260 320,200 80,200",fill:p[0],opacity:".9"},svg);
- el("polygon",{points:"0,0 80,50 80,200 0,260",fill:"url(#brick)",opacity:".75"},svg);
- el("polygon",{points:"400,0 320,50 320,200 400,260",fill:"url(#brick)",opacity:".75"},svg);
- el("rect",{x:80,y:50,width:240,height:150,fill:"url(#brick)"},svg);
- el("rect",{x:0,y:0,width:400,height:260,fill:"url(#glow)"},svg);
- // torches
- [[110,95],[290,95]].forEach(function(t){el("rect",{x:t[0]-3,y:t[1],width:6,height:18,fill:"#5a3a1a"},svg);var f=el("ellipse",{cx:t[0],cy:t[1]-6,rx:6,ry:10,fill:"#ffb347"},svg);el("animate",{attributeName:"ry",values:"10;7;11;9;10",dur:"1.2s",repeatCount:"indefinite"},f);el("ellipse",{cx:t[0],cy:t[1]-4,rx:3,ry:5,fill:"#fff2a8"},svg);});
- var doors={N:"M170,200 V115 A30,30 0 0 1 230,115 V200 Z",W:"M18,232 V95 L58,68 V202 Z",E:"M382,232 V95 L342,68 V202 Z",S:"M150,252 L250,252 L235,222 L165,222 Z"};
- var labels={N:"North",S:"South",E:"East",W:"West"};
- Object.keys(doors).forEach(function(d){if(!c.d[d])return;
+ var svg=document.getElementById("scene");svg.innerHTML="";var c=S.m.cells[S.cur],R=ROOMS[c.img],open=!!S.solved[S.cur],isExit=S.cur===S.m.exit;
+ svg.setAttribute("viewBox","0 0 100 56.25");
+ el("image",{href:"img/"+c.img+".jpg",x:0,y:0,width:100,height:56.25,preserveAspectRatio:"none"},svg);
+ var labels={N:"Back",S:"Trapdoor",E:"Right",W:"Left"};
+ Object.keys(DIRS).forEach(function(d){if(!c.d[d])return;var b=R[DMAP[d]]||DEFF,k=0.5625;
+  var x=b[0],y=b[1]*k,w=b[2],h=b[3]*k;
   var a=el("g",{"class":"door "+(open?"open":"locked"),tabindex:open?"0":"-1",role:"button","aria-label":labels[d]+" door"+(open?"":" (locked)")},svg);
-  el("path",{d:doors[d],fill:open?"#120c06":"#4a2e16",stroke:"#d4af37","stroke-width":"2"},a);
-  if(!open){el("path",{d:doors[d],fill:"none",stroke:"#2a1a0a","stroke-width":"1","stroke-dasharray":"2 6"},a);var bb={N:[200,160],W:[38,150],E:[362,150],S:[200,238]}[d];el("circle",{cx:bb[0],cy:bb[1],r:5,fill:"#d4af37"},a);}
-  else{var tp={N:[200,165],W:[38,155],E:[362,155],S:[200,242]}[d];var tx=el("text",{x:tp[0],y:tp[1],fill:"#d4af37","font-size":"12","text-anchor":"middle","font-family":"Georgia,serif"},a);tx.textContent=d;}
+  if(d==="S"&&!R.trap){el("rect",{x:x,y:y,width:w,height:h,rx:1,fill:"#2a1a0c",stroke:"#6b4a22","stroke-width":".5",opacity:".85"},a);
+   for(var i=1;i<4;i++)el("line",{x1:x+w*i/4,y1:y,x2:x+w*i/4,y2:y+h,stroke:"#140c05","stroke-width":".4"},a);
+   el("circle",{cx:x+w/2,cy:y+h/2,r:1.1,fill:"none",stroke:"#8a6a3a","stroke-width":".5"},a);}
+  el("rect",{"class":"hit",x:x,y:y,width:w,height:h,rx:1.5},a);
+  if(!open){for(var j=1;j<5;j++)el("line",{x1:x+w*j/5,y1:y+1,x2:x+w*j/5,y2:y+h-1,"class":"bar"},a);
+   el("line",{x1:x+.5,y1:y+h*.45,x2:x+w-.5,y2:y+h*.45,"class":"bar"},a);
+   var t=el("text",{x:x+w/2,y:y+h*.45+1.3,"class":"rune","text-anchor":"middle"},a);t.textContent="ᛟ";}
   var tt=el("title",{},a);tt.textContent=labels[d]+(open?"":" — answer the riddle to unlock");
-  a.addEventListener("click",function(){if(!open)say("Locked! Answer the riddle first.");else move(d);});
+  a.addEventListener("click",function(){if(!open)say("Locked! Answer my riddle first.");else move(d);});
   a.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();move(d);}});
  });
- if(isExit){var t=el("text",{x:200,y:140,fill:"#3fbf7f","font-size":"22","text-anchor":"middle","font-family":"Georgia,serif"},svg);t.textContent="✦ The Archive ✦";}
+ if(isExit){el("rect",{x:0,y:0,width:100,height:56.25,fill:"#000",opacity:".35"},svg);var t=el("text",{x:50,y:30,fill:"#7fffb0","font-size":"5","text-anchor":"middle","font-family":"Georgia,serif"},svg);t.textContent="✦ The Archive ✦";}
 }
 function drawQuiz(){
  var box=document.getElementById("quiz");box.innerHTML="";
