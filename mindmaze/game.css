@@ -4,8 +4,7 @@
 .mm-scene{position:relative;border:1px solid rgba(212,175,55,.35);border-radius:6px;overflow:hidden;background:#000}
 #scene{display:block;width:100%;height:auto}
 .door{cursor:pointer;transition:filter .2s}
-.door.locked{cursor:not-allowed}
-.door.open:hover,.door.open:focus{filter:drop-shadow(0 0 8px #ffd86b) brightness(1.4);outline:none}
+.door.locked{cursor:pointer}
 .mm-overlay{position:absolute;inset:0;background:rgba(5,3,10,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:10px}
 .mm-overlay h2{font-family:Georgia,serif;color:#d4af37;font-size:clamp(20px,5vw,30px)}
 .mm-overlay p{color:#ddd;font-size:15px;max-width:480px}
@@ -29,12 +28,10 @@
 /* painted edition */
 .mm-scene{aspect-ratio:16/9}
 #scene{height:100%}
-.door .hit{fill:transparent;stroke:transparent;stroke-width:.6;transition:all .2s}
-.door.locked .hit{fill:rgba(10,5,0,.35)}
-.door .bar{stroke:#3a3632;stroke-width:.7;stroke-linecap:round;filter:drop-shadow(0 0 .3px #000)}
-.door .rune{fill:#b8862f;font-size:3.2px;font-family:Georgia,serif;opacity:.85}
-.door.open:hover .hit,.door.open:focus .hit{fill:rgba(255,210,110,.18);stroke:#ffd86b;filter:drop-shadow(0 0 1.5px #ffd86b)}
-.door.open:hover,.door.open:focus{filter:none}
+.door .hit{fill:transparent;stroke:none;transition:fill .25s}
+.door .hit.dbg{stroke:#0ff;stroke-width:.35;stroke-dasharray:1 .6}
+.door.open:hover .hit,.door.open:focus .hit{fill:rgba(255,210,120,.08)}
+.door:focus{outline:none}
 .mm-jester{position:relative;background:#f1e6c8;color:#2a1a0c;font-style:italic;border-radius:10px;padding:10px 14px;margin:14px 2px 12px;box-shadow:0 2px 8px rgba(0,0,0,.6)}
 .mm-jester::before{content:"";position:absolute;top:-9px;left:28px;border:9px solid transparent;border-top:0;border-bottom-color:#f1e6c8}
 .mm-jester b{font-style:normal;color:#7a1f1f;font-family:Georgia,serif}
