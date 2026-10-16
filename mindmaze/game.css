@@ -44,3 +44,6 @@
 .mm-quiz .mm-btn:hover{background:rgba(255,248,225,.9);border-color:#7a1f1f}
 .mm-quiz .mm-btn.good{background:#bfe0b0;border-color:#3a7a3a}
 .mm-quiz .mm-btn.bad{background:#e8b0a8;border-color:#a33}
+
+.mm-turn{display:block;margin:12px auto 0;background:none;border:none;color:#6b4a22;font-family:Georgia,serif;font-size:14px;text-decoration:underline;cursor:pointer;min-height:36px;padding:6px 12px}
+.mm-turn:hover{color:#7a1f1f}

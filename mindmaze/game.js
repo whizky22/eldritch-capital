@@ -59,7 +59,7 @@ var ROOMS={
 "great-hall":{host:"jester",L:[9,33,9,51],B:[46,54,9,24],R:[82,35,9,49]},
 "library":{host:"maiden",L:[11,28,9,21],B:[48,49,9,28],R:[82,30,9,52]},
 "alchemist":{host:"witch",L:[15,27,7,52],B:[43,31,12,41],R:[83,20,9,62]},
-"dungeon":{host:"gargoyle",L:[10,38,9,47],B:[43,38,13,33],R:[82,40,8,45],F:[39,83,22,14],trap:1},
+"dungeon":{host:"gargoyle",L:[10,38,9,47],B:[43,38,13,33],R:[82,40,8,45]},
 "chapel":{host:"monk",L:[11,25,9,58],B:[46,42,11,35],R:[81,26,9,57]},
 "banquet":{host:"jester",L:[4,20,8,53],B:[43,48,16,12],R:[88,20,8,53]},
 "throne":{host:"maiden",L:[5,25,12,43],B:[41,8,18,52],R:[76,25,10,43]},
@@ -69,9 +69,19 @@ var ROOMS={
 "armoury":{host:"armour",L:[6,30,8,43],B:[45,34,10,34],R:[82,32,8,40]},
 "kitchen":{host:"witch",L:[4,15,10,63],B:[45,30,15,42],R:[86,24,9,55]},
 "garden":{host:"maiden",L:[5,14,9,40],B:[46,15,9,38],R:[89,14,8,40]},
-"clocktower":{host:"monk",L:[6,38,14,48],B:[41,42,18,42],R:[78,38,11,48]}};
+"clocktower":{host:"monk",L:[6,38,14,48],B:[41,42,18,42],R:[78,38,11,48]},
+"deadend-witch":{host:"witch"},
+"music-C":{host:"maiden",B:[45,25,14,51]},
+"maproom-L":{host:"monk",L:[6,15,14,68]},
+"portrait-R":{host:"king",R:[80,12,9,74]},
+"weaving-LR":{host:"spinner",L:[10,20,9,62],R:[87,21,9,61]},
+"cellar-LC":{host:"jester",L:[18,20,8,59],B:[46,38,11,36]},
+"scriptorium-CR":{host:"maiden",B:[45,26,10,38],R:[85,21,9,61]}};
 var EXITROOM={host:"jester",B:[45,40,10,30]};
-var RNAMES=Object.keys(ROOMS),DMAP={N:"B",W:"L",E:"R",S:"F"},DEFF=[40,82,20,13];
+var RNAMES=Object.keys(ROOMS),RK={L:"L",C:"B",R:"R"};
+function doorKey(n){var R=ROOMS[n],s="";["L","C","R"].forEach(function(k){if(R[RK[k]])s+=k;});return s;}
+var POOLS={};RNAMES.forEach(function(n){if(n==="great-hall")return;var k=doorKey(n);(POOLS[k]=POOLS[k]||[]).push(n);});
+var LEFT={N:"W",W:"S",S:"E",E:"N"},RIGHT={N:"E",E:"S",S:"W",W:"N"};
 var HOSTS={
 jester:{name:"The Jester",enter:["Hee hee! Another fool wanders in. Answer, or dangle with me!","Upside down, inside out — which way is the exit? I shan't tell!","Ooh, a fresh head for my collection of bells."],good:["Pah! Lucky guess. The doors are yours.","Correct?! Ugh. Off you go, clever-clogs."],bad:["WRONG! Ha! I'll ring a bell for every life you lose!","Oh dear, oh dear. Your skull would make a lovely rattle."],open:["Back so soon? I missed laughing at you."]},
 maiden:{name:"The Pale Maiden",enter:["I have waited here so long… answer me, and I may let you pass.","My candle burns low. Will you answer before it dies?","They all forgot me. Do not forget this question."],good:["Yes… you remember. Go, before the dark notices.","Truly answered. The doors sigh open for you."],bad:["No… that is what the others said, before they vanished.","Wrong. Another year added to my waiting."],open:["You returned… no one ever returns."]},
@@ -79,6 +89,8 @@ witch:{name:"The Witch",enter:["Heh-heh-heh! Into the pot, or into the riddle? C
 monk:{name:"The Hooded Monk",enter:["Silence. Here, knowledge is the only prayer.","The lantern reveals truth to those who answer truly.","Kneel, pilgrim, and be tested."],good:["It is written. The way is open.","Wisdom is its own absolution. Go."],bad:["Error is a penance. Pay it.","The candles gutter. A life is taken in tithe."],open:["Peace. You have already been judged here."]},
 astrologer:{name:"The Astrologer",enter:["Mercury is in retrograde, and so, I fear, are you. Answer!","The stars foretold your arrival. They were unimpressed.","I have charted ten thousand heavens. Now chart this question."],good:["As the constellations predicted. Obviously. Proceed.","Correct! Saturn smiles, briefly. The doors align."],bad:["Wrong! The heavens wince. A life falls like a meteor.","Tsk. Your answer is as dim as a dying star."],open:["You orbit back to me. How predictable. Doors are open."]},
 armour:{name:"The Empty Armour",enter:["We… are… many. We… are… empty. Answer… us…","Clank. Our helms are hollow. Our question is not.","We stood guard for centuries. Speak true, or join our ranks."],good:["Correct… we let… you pass…","The steel remembers that answer. Go."],bad:["Wrong… another suit… for the rack…","We… heard… a life… fall."],open:["We… remember… you. The doors… are open."]},
+king:{name:"The Staring King",enter:["You stand before a KING. Kneel, and answer.","My painted eyes have followed a thousand fools. Answer, fool.","I ruled this castle once. Now I rule this question."],good:["Hmph. A worthy subject. Pass.","Correct. You may leave our royal presence."],bad:["WRONG! Off with… one of your lives.","We are not amused. A life is forfeit."],open:["You return to court? The door stands open."]},
+spinner:{name:"The Old Spinner",enter:["Spin, spin, the thread runs thin… answer me before it snaps.","Every wanderer is a thread in my tapestry, dearie.","Sit a while. Answer a while. Never leave a while."],good:["There, the knot comes loose. The doors are yours.","A fine thread of thought. Go on."],bad:["Snip! There goes a thread of your life.","Tangled, tangled. Try again."],open:["Back to my loom? The doors are still open, pet."]},
 gargoyle:{name:"The Red Gargoyle",enter:["GRRR. Answer. Or I eat.","Stone wings. Stone teeth. Stone patience. ANSWER.","Many come down here. Few go up. Riddle time."],good:["Hmph. Right. Go. Before I change mind.","Correct. Trapdoor and doors open. Bah."],bad:["WRONG. Crunch. One life gone.","Hrrk. Bad answer. Tasty adventurer."],open:["You again. Doors open. Go away."]}};
 var N=6,DIRS={N:[0,-1],S:[0,1],E:[1,0],W:[-1,0]},OPP={N:"S",S:"N",E:"W",W:"E"};
 var PAL=[["#2b2236","#3d3150","#1a1424"],["#1f2e2a","#2f4640","#121c19"],["#33241c","#4a3528","#1d1410"],["#22283a","#333c56","#141824"],["#2e1f2b","#46303f","#1b1219"],["#2a2a22","#3f3f33","#18180f"]];
@@ -87,23 +99,35 @@ function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function shuffle(a,r){r=r||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function key(x,y){return x+","+y;}
-// Every painted door is a real exit: back=N, left=W, right=E, floor trapdoor=S. The castle wraps around at its edges.
-function exits(c){if(c.img==="archive-exit")return {};var R=ROOMS[c.img],o={};for(var d in DMAP)if(R[DMAP[d]])o[d]=1;return o;}
-function nb(c,d){return key((c.x+DIRS[d][0]+N)%N,(c.y+DIRS[d][1]+N)%N);}
+// Facing-relative view: the painted doors are the open exits to your left, ahead and right.
+function nb(c,d){var x=c.x+DIRS[d][0],y=c.y+DIRS[d][1];return (x<0||y<0||x>=N||y>=N)?null:key(x,y);}
+function viewKey(k,f){var c=S.m.cells[k],r={L:LEFT[f],C:f,R:RIGHT[f]},s="";["L","C","R"].forEach(function(z){if(c.d[r[z]])s+=z;});return s;}
+function relDir(z){return {L:LEFT[S.face],C:S.face,R:RIGHT[S.face]}[z];}
+function hash(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function viewImg(){
+ if(S.cur===S.m.exit)return "archive-exit";
+ if(S.cur===S.m.start&&S.face==="N")return "great-hall";
+ var k=S.cur+S.face;if(S.views[k])return S.views[k];
+ var pool=POOLS[viewKey(S.cur,S.face)],i=hash(S.seed+":"+k)%pool.length;
+ if(pool[i]===S.lastImg&&pool.length>1)i=(i+1)%pool.length;
+ return S.views[k]=pool[i];
+}
 function genMaze(){
- var cells={},x,y;for(y=0;y<N;y++)for(x=0;x<N;x++)cells[key(x,y)]={x:x,y:y};
- var sx=Math.floor(rng()*N),sy=N-1,start=key(sx,sy);
- cells[start].img="great-hall";
- for(y=0;y<N;y++)for(x=0;x<N;x++){if(cells[key(x,y)].img)continue;var ban={"great-hall":1};[[-1,0],[0,-1],[1,0],[0,1]].forEach(function(o){var n=cells[key((x+o[0]+N)%N,(y+o[1]+N)%N)];if(n.img)ban[n.img]=1;});var pool=RNAMES.filter(function(n){return !ban[n];});cells[key(x,y)].img=pool[Math.floor(rng()*pool.length)];}
+ var cells={},x,y;for(y=0;y<N;y++)for(x=0;x<N;x++)cells[key(x,y)]={x:x,y:y,d:{}};
+ function link(k,d){var c=cells[k],n=nb(c,d);if(!n)return;c.d[d]=1;cells[n].d[OPP[d]]=1;}
+ var sx=1+Math.floor(rng()*(N-2)),sy=N-1,start=key(sx,sy),stack=[start],seen={};seen[start]=1;
+ while(stack.length){var k=stack[stack.length-1],c=cells[k],opts=shuffle(Object.keys(DIRS),rng).filter(function(d){var n=nb(c,d);return n&&!seen[n];});
+  if(!opts.length){stack.pop();continue;}var n=nb(c,opts[0]);link(k,opts[0]);seen[n]=1;stack.push(n);}
+ for(var i=0;i<3;i++){var rk=key(Math.floor(rng()*N),Math.floor(rng()*N)),rd=Object.keys(DIRS)[Math.floor(rng()*4)];link(rk,rd);}
+ link(start,"W");link(start,"N");link(start,"E");
  var dist={},q=[start];dist[start]=0;var far=start;
- while(q.length){var k=q.shift();if(dist[k]>dist[far])far=k;var c=cells[k];for(var d in exits(c)){var ak=nb(c,d);if(!(ak in dist)){dist[ak]=dist[k]+1;q.push(ak);}}}
- cells[far].img="archive-exit";
+ while(q.length){var k2=q.shift();if(dist[k2]>dist[far])far=k2;for(var d in cells[k2].d){var ak=nb(cells[k2],d);if(!(ak in dist)){dist[ak]=dist[k2]+1;q.push(ak);}}}
  return {cells:cells,start:start,exit:far,len:dist[far]};
 }
 function newGame(){
  var seed=(Date.now()^Math.floor(Math.random()*1e9))>>>0;rng=mulberry(seed);
  var m=genMaze();
- S={m:m,cur:m.start,lives:5,score:0,steps:0,visited:{},solved:{},deck:shuffle(Q.map(function(_,i){return i;})),qi:0,q:null,over:false,seed:seed};
+ S={m:m,cur:m.start,lives:5,score:0,steps:0,visited:{},solved:{},deck:shuffle(Q.map(function(_,i){return i;})),qi:0,q:null,over:false,seed:seed,face:"N",views:{},lastImg:null};
  S.visited[m.start]=1;S.intro=true;hideOverlay();renderIntro();
 }
 function nextQ(){if(S.qi>=S.deck.length){S.deck=shuffle(S.deck);S.qi=0;}var raw=Q[S.deck[S.qi++]];var o=raw[2].map(function(t,i){return{t:t,c:i===raw[3]};});return{cat:raw[0],text:raw[1],opts:shuffle(o)};}
@@ -113,8 +137,8 @@ function enter(first){
  var H=host();if(S.solved[S.cur]){S.q=null;say(pick(H.open));}else{S.q=nextQ();say(pick(H.enter));}
  render();
 }
-function room(c){return c.img==="archive-exit"?EXITROOM:ROOMS[c.img];}
-function host(){return HOSTS[room(S.m.cells[S.cur]).host];}
+function room(){var n=viewImg();return n==="archive-exit"?EXITROOM:ROOMS[n];}
+function host(){return HOSTS[room().host];}
 function say(t,who){var j=document.getElementById("jester");j.innerHTML="";var n=document.createElement("b");n.textContent=(who||(S&&S.m?host().name:"The Jester"))+":";j.appendChild(n);j.appendChild(document.createTextNode(" “"+t+"”"));}
 function answer(i,btn){
  if(S.over||!S.q)return;var o=S.q.opts[i];
@@ -123,10 +147,11 @@ function answer(i,btn){
   if(S.lives<=0){render();return lose();}setTimeout(function(){S.q=nextQ();render();},700);}
  hud();
 }
-function move(d){
- if(S.over||!S.solved[S.cur])return;var c=S.m.cells[S.cur];if(!exits(c)[d])return;
- S.cur=nb(c,d);S.steps++;if(!S.visited[S.cur]){S.visited[S.cur]=1;S.score+=10;}enter(false);
+function move(z){
+ if(S.over||!S.solved[S.cur])return;var c=S.m.cells[S.cur],d=relDir(z);if(!c.d[d])return;
+ S.cur=nb(c,d);S.face=d;S.steps++;if(!S.visited[S.cur]){S.visited[S.cur]=1;S.score+=10;}enter(false);
 }
+function turnBack(){if(S.over||S.intro)return;S.face=OPP[S.face];var H=host();say(S.solved[S.cur]?pick(H.open):pick(H.enter));render();}
 function hud(){
  document.getElementById("hud-lives").textContent="Lives: "+"♥".repeat(Math.max(0,S.lives))+"♡".repeat(5-Math.max(0,S.lives));
  document.getElementById("hud-score").textContent="Score: "+S.score;
@@ -138,13 +163,14 @@ function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k i
 var DEBUG=/[?&]debug=1/.test(location.search);
 function archPath(x,y,w,h){var r=Math.min(w/2,h*0.45);return "M"+x+","+(y+h)+"V"+(y+r)+"A"+(w/2)+","+r+" 0 0 1 "+(x+w)+","+(y+r)+"V"+(y+h)+"Z";}
 function drawScene(){
- var svg=document.getElementById("scene");svg.innerHTML="";var c=S.m.cells[S.cur],R=room(c),open=!!S.solved[S.cur],isExit=S.cur===S.m.exit;
- svg.setAttribute("viewBox","0 0 100 56.25");
- el("image",{href:"img/"+c.img+".jpg",x:0,y:0,width:100,height:56.25,preserveAspectRatio:"none"},svg);
- var labels={N:"Back",S:"Trapdoor",E:"Right",W:"Left"};
- var dirs=isExit?["N"]:Object.keys(exits(c));
- dirs.forEach(function(d){var b=R[DMAP[d]]||DEFF,k=0.5625;
-  var x=b[0],y=b[1]*k,w=b[2],h=b[3]*k,floor=d==="S";
+ var svg=document.getElementById("scene");svg.innerHTML="";var img=viewImg(),R=room(),open=!!S.solved[S.cur],isExit=S.cur===S.m.exit;
+ svg.setAttribute("viewBox","0 0 100 56.25");svg.setAttribute("data-img",img);
+ el("image",{href:"img/"+img+".jpg",x:0,y:0,width:100,height:56.25,preserveAspectRatio:"none"},svg);
+ var labels={L:"Left",C:"Ahead",R:"Right"};
+ var dirs=isExit?["C"]:["L","C","R"].filter(function(z){return R[RK[z]];});
+ S.lastImg=img;
+ dirs.forEach(function(d){var b=R[RK[d]],k=0.5625;
+  var x=b[0],y=b[1]*k,w=b[2],h=b[3]*k,floor=false;
   var a=el("g",{"class":"door "+(open?"open":"locked")+(isExit?" golden":""),tabindex:"0",role:"button","data-dir":d,"aria-label":labels[d]+" door"+(open?"":" (locked)")},svg);
   el("path",{"class":"hit"+(DEBUG?" dbg":""),d:floor?("M"+x+","+y+"h"+w+"v"+h+"h"+(-w)+"Z"):archPath(x,y,w,h)},a);
   var tt=el("title",{},a);tt.textContent=labels[d]+(open?"":" — answer the riddle to unlock");
@@ -157,18 +183,21 @@ function drawScene(){
 var LOCKED=["Sealed! Answer my riddle first.","Not so fast. The seal holds until you answer.","That door is spoken for. Answer, then try."];
 function drawQuiz(){
  var box=document.getElementById("quiz");box.innerHTML="";
- if(!S.q){box.innerHTML=S.cur===S.m.exit?'<div class="q">The golden door awaits. Click it to claim the Archive.</div>':'<div class="q">The doors are unlocked. Click a door in the painting above.</div>';return;}
+ var tb=document.createElement("button");tb.className="mm-turn";tb.id="turn-back";tb.textContent="\u21BA Turn back";tb.onclick=turnBack;
+ if(!S.q){var dk=viewKey(S.cur,S.face);box.innerHTML=S.cur===S.m.exit?'<div class="q">The golden door awaits. Click it to claim the Archive.</div>':(dk?'<div class="q">The doors are unlocked. Click a door in the painting above.</div>':'<div class="q">A dead end! Nothing ahead but the cauldron. Turn back.</div>');box.appendChild(tb);return;}
  var cat=document.createElement("div");cat.className="cat";cat.textContent=S.q.cat;box.appendChild(cat);
  var q=document.createElement("div");q.className="q";q.textContent=S.q.text;box.appendChild(q);
  var o=document.createElement("div");o.className="opts";box.appendChild(o);
  S.q.opts.forEach(function(op,i){var b=document.createElement("button");b.className="mm-btn";b.textContent=op.t;b.onclick=function(){answer(i,b);};o.appendChild(b);});
+ box.appendChild(tb);
 }
 function drawMap(){
  var svg=document.getElementById("map");svg.innerHTML="";var sz=20;
  for(var k in S.m.cells){var c=S.m.cells[k],v=S.visited[k],ex=k===S.m.exit,cur=k===S.cur;
   if(!v&&!ex)continue;
   el("rect",{x:c.x*sz+3,y:c.y*sz+3,width:sz-6,height:sz-6,rx:2,fill:cur?"#ffd86b":ex?"#3fbf7f":"#5a4a7a"},svg);
-  if(v)for(var d in exits(c)){var x1=c.x*sz+10,y1=c.y*sz+10;el("line",{x1:x1+DIRS[d][0]*7,y1:y1+DIRS[d][1]*7,x2:x1+DIRS[d][0]*10,y2:y1+DIRS[d][1]*10,stroke:"#8a7aaa","stroke-width":"2"},svg);}
+  if(v)for(var d in c.d){var x1=c.x*sz+10,y1=c.y*sz+10;el("line",{x1:x1+DIRS[d][0]*7,y1:y1+DIRS[d][1]*7,x2:x1+DIRS[d][0]*10,y2:y1+DIRS[d][1]*10,stroke:"#8a7aaa","stroke-width":"2"},svg);}
+  if(cur){var ang={N:0,E:90,S:180,W:270}[S.face],cx=c.x*sz+10,cy=c.y*sz+10;el("polygon",{id:"map-arrow","data-face":S.face,points:(cx)+","+(cy-5)+" "+(cx+4)+","+(cy+4)+" "+(cx)+","+(cy+2)+" "+(cx-4)+","+(cy+4),fill:"#2a1a0c",transform:"rotate("+ang+" "+cx+" "+cy+")"},svg);}
  }
 }
 var GATE=[53.7,56,7.5,24.7];
@@ -181,7 +210,7 @@ function renderIntro(){
  function go(){if(!S.intro)return;S.intro=false;enter(true);}
  a.addEventListener("click",go);a.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}});
  say("Knock knock, wanderer! Welcome to The Maze. Answer each chamber's riddle to unlock its painted doors, and find the hidden Archive. Five lives. Hee hee!","The Jester");
- var box=document.getElementById("quiz");box.innerHTML="";var q=document.createElement("div");q.className="q";q.textContent="Click the great gate in the painting to enter. Inside, every painted door is a way onward (back = north, left = west, right = east, dungeon trapdoor = south), and the castle folds back on itself at its edges.";box.appendChild(q);
+ var box=document.getElementById("quiz");box.innerHTML="";var q=document.createElement("div");q.className="q";q.textContent="Click the great gate in the painting to enter. Inside, every painted door is a way onward is a way onward. Some rooms have three doors, some one, and some none at all. Use \u201cTurn back\u201d to face the way you came. The map shows where you have been.";box.appendChild(q);
  var b=document.createElement("button");b.className="mm-btn cta";b.textContent="Enter the castle";b.style.marginTop="10px";b.onclick=go;box.appendChild(b);
 }
 function render(){hud();drawScene();drawQuiz();drawMap();}
@@ -191,6 +220,6 @@ function win(){S.over=true;S.score+=S.lives*50;hud();say("Curses! You found the 
  overlay("You reached the Archive!","Score "+S.score+" · "+S.steps+" steps (shortest path: "+S.m.len+") · "+S.lives+" lives left. The Archivist grants you a single footnote of forbidden knowledge.",["Play again",newGame]);}
 function lose(){S.over=true;say("Ha! Another soul for the stacks.");document.getElementById("quiz").innerHTML="";
  overlay("Lost in The Maze","Your lives are spent. Score "+S.score+" after "+S.steps+" steps. The jester files you under 'Miscellaneous'.",["Try again",newGame]);}
-window.__mm=function(){return S;};window.__mmRender=function(){render();};
+window.__mm=function(){return S;};window.__mmRender=function(){render();};window.__mmApi={viewKey:viewKey,viewImg:viewImg,doorKey:doorKey,POOLS:POOLS,nb:nb,relDir:relDir};
 newGame();
 })();
