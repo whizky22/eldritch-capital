@@ -36,7 +36,7 @@ var Q=[
 ["Sci-Fi","Scottish author Iain M. Banks wrote which space-opera series?",["The Culture","The Expanse","Hyperion","Revelation Space"],0],
 ["Sci-Fi","'Blade Runner' is based on a novel by…",["Philip K. Dick","William Gibson","Ray Bradbury","Ursula K. Le Guin"],0],
 ["Sci-Fi","William Gibson's 1984 novel that popularised 'cyberspace' is…",["Neuromancer","Snow Crash","Accelerando","Ubik"],0],
-["Gaming","Mindmaze shipped with which Microsoft multimedia encyclopedia?",["Encarta","Bookshelf","Cinemania","Works"],0],
+["Gaming","Which 1980 arcade game starred a yellow character eating dots in a maze?",["Pac-Man","Galaxian","Frogger","Q*bert"],0],
 ["Gaming","Which 1993 game by id Software popularised the first-person shooter?",["Doom","Quake","Wolfenstein 3D","Half-Life"],0],
 ["Gaming","'Myst' (1993) was created by which studio?",["Cyan","Sierra","LucasArts","Bullfrog"],0],
 ["Gaming","Grand Theft Auto was originally developed in which Scottish city?",["Dundee","Glasgow","Aberdeen","Edinburgh"],0],
@@ -105,7 +105,6 @@ function newGame(){
  var m=genMaze();
  S={m:m,cur:m.start,lives:5,score:0,steps:0,visited:{},solved:{},deck:shuffle(Q.map(function(_,i){return i;})),qi:0,q:null,over:false,seed:seed};
  S.visited[m.start]=1;S.intro=true;hideOverlay();renderIntro();
- if(0)overlay("Enter the Labyrinth","The Archivist has locked his secrets deep in the castle. Answer each chamber's riddle to unlock its doors, then click a door in the scene to pass through. Every door painted in a room is a way onward: back is north, left is west, right is east, and the dungeon trapdoor drops south. The castle folds back on itself at its edges. Find the green exit. You have five lives.",["Begin",function(){hideOverlay();}]);
 }
 function nextQ(){if(S.qi>=S.deck.length){S.deck=shuffle(S.deck);S.qi=0;}var raw=Q[S.deck[S.qi++]];var o=raw[2].map(function(t,i){return{t:t,c:i===raw[3]};});return{cat:raw[0],text:raw[1],opts:shuffle(o)};}
 function enter(first){
@@ -181,7 +180,7 @@ function renderIntro(){
  var tt=el("title",{},a);tt.textContent="Enter the castle";
  function go(){if(!S.intro)return;S.intro=false;enter(true);}
  a.addEventListener("click",go);a.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}});
- say("Knock knock, wanderer! The Archivist's castle awaits. Answer each chamber's riddle to unlock its painted doors, and find the hidden Archive. Five lives. Hee hee!","The Jester");
+ say("Knock knock, wanderer! Welcome to The Maze. Answer each chamber's riddle to unlock its painted doors, and find the hidden Archive. Five lives. Hee hee!","The Jester");
  var box=document.getElementById("quiz");box.innerHTML="";var q=document.createElement("div");q.className="q";q.textContent="Click the great gate in the painting to enter. Inside, every painted door is a way onward (back = north, left = west, right = east, dungeon trapdoor = south), and the castle folds back on itself at its edges.";box.appendChild(q);
  var b=document.createElement("button");b.className="mm-btn cta";b.textContent="Enter the castle";b.style.marginTop="10px";b.onclick=go;box.appendChild(b);
 }
@@ -191,7 +190,7 @@ function hideOverlay(){document.getElementById("overlay").classList.add("hidden"
 function win(){S.over=true;S.score+=S.lives*50;hud();say("Curses! You found the Archive. The jester will remember this.");document.getElementById("quiz").innerHTML="";
  overlay("You reached the Archive!","Score "+S.score+" · "+S.steps+" steps (shortest path: "+S.m.len+") · "+S.lives+" lives left. The Archivist grants you a single footnote of forbidden knowledge.",["Play again",newGame]);}
 function lose(){S.over=true;say("Ha! Another soul for the stacks.");document.getElementById("quiz").innerHTML="";
- overlay("Lost in the Labyrinth","Your lives are spent. Score "+S.score+" after "+S.steps+" steps. The jester files you under 'Miscellaneous'.",["Try again",newGame]);}
+ overlay("Lost in The Maze","Your lives are spent. Score "+S.score+" after "+S.steps+" steps. The jester files you under 'Miscellaneous'.",["Try again",newGame]);}
 window.__mm=function(){return S;};window.__mmRender=function(){render();};
 newGame();
 })();
