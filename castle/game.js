@@ -1,54 +1,15 @@
 (function(){
 "use strict";
-var Q=[
-["Markets","In which year did US President Nixon close the gold window, ending dollar convertibility to gold?",["1971","1965","1979","1983"],0],
-["Markets","Paul Volcker became Chair of the Federal Reserve in which year?",["1979","1971","1987","1969"],0],
-["Markets","'Black Monday', when the Dow fell about 22% in one day, happened in October of which year?",["1987","1929","1997","2008"],0],
-["Markets","The 1944 conference that set up the post-war fixed exchange rate system was held at…",["Bretton Woods","Jackson Hole","Davos","Plaza Hotel"],0],
-["Markets","The 1985 agreement to weaken the US dollar is named after which New York hotel?",["The Plaza","The Waldorf","The Ritz","The Carlyle"],0],
-["Markets","Which country's sovereign debt default in August 1998 helped topple LTCM?",["Russia","Argentina","Mexico","Thailand"],0],
-["Markets","Britain was forced out of the ERM on 16 September 1992, a day remembered as…",["Black Wednesday","Black Friday","Big Bang","Grey Tuesday"],0],
-["Markets","Which investor famously profited from shorting the pound in 1992?",["George Soros","Warren Buffett","Ray Dalio","Carl Icahn"],0],
-["Markets","The Asian Financial Crisis began in 1997 with a currency crisis in which country?",["Thailand","Japan","South Korea","Indonesia"],0],
-["Markets","Tulip mania, the classic speculative bubble, peaked in which country around 1637?",["Dutch Republic","England","France","Venice"],0],
-["Markets","John Law's Mississippi Company bubble burst in which country?",["France","England","Spain","Scotland"],0],
-["Markets","A bond's price and its yield generally move…",["In opposite directions","Together","Independently","Only up"],0],
-["Markets","The 'yield curve inverts' when…",["Short-term yields exceed long-term yields","Long yields exceed short yields","Stocks beat bonds","Inflation hits zero"],0],
-["Markets","Who wrote 'The General Theory of Employment, Interest and Money' (1936)?",["John Maynard Keynes","Milton Friedman","Friedrich Hayek","Adam Smith"],0],
-["Markets","Weimar Germany's hyperinflation peaked in which year?",["1923","1919","1931","1914"],0],
-["Scotland","Adam Smith, author of 'The Wealth of Nations', was born in which Scottish town?",["Kirkcaldy","Perth","Stirling","Inverness"],0],
-["Scotland","The ill-fated Darien scheme was Scotland's attempt to found a colony in modern…",["Panama","Nova Scotia","Jamaica","Brazil"],0],
-["Scotland","The Battle of Bannockburn, won by Robert the Bruce, was fought in which year?",["1314","1296","1415","1746"],0],
-["Scotland","The last pitched battle on British soil, Culloden, was fought in…",["1746","1715","1689","1603"],0],
-["Scotland","In 1603 James VI of Scotland also became king of…",["England","France","Norway","Denmark"],0],
-["Scotland","The Bank of Scotland was founded in which year?",["1695","1727","1810","1603"],0],
-["Scotland","Which Scot is credited with patenting the telephone in 1876?",["Alexander Graham Bell","James Watt","John Logie Baird","Robert Burns"],0],
-["Lovecraft","In Lovecraft, where does great Cthulhu lie dreaming?",["R'lyeh","Kadath","Innsmouth","Leng"],0],
-["Lovecraft","The fictional Miskatonic University is located in which town?",["Arkham","Dunwich","Kingsport","Providence"],0],
-["Lovecraft","Who wrote the forbidden Necronomicon in Lovecraft's mythos?",["Abdul Alhazred","Joseph Curwen","Wilbur Whateley","Randolph Carter"],0],
-["Lovecraft","Lovecraft was born and lived most of his life in which city?",["Providence","Boston","Salem","New York"],0],
-["Lovecraft","Which Outer God is called 'the Crawling Chaos'?",["Nyarlathotep","Azathoth","Yog-Sothoth","Dagon"],0],
-["Lovecraft","Robert W. Chambers' 'The King in Yellow' features which lost city?",["Carcosa","Sarnath","Irem","Hyperborea"],0],
-["Sci-Fi","In 'The Hitchhiker's Guide to the Galaxy', the Answer to the Ultimate Question is…",["42","7","1024","None"],0],
-["Sci-Fi","Who wrote the 'Foundation' series, featuring psychohistory?",["Isaac Asimov","Arthur C. Clarke","Frank Herbert","Philip K. Dick"],0],
-["Sci-Fi","In 'Dune', the precious spice is called…",["Melange","Ambrosia","Kyber","Unobtainium"],0],
-["Sci-Fi","HAL 9000 is the computer in which film?",["2001: A Space Odyssey","Alien","Blade Runner","Solaris"],0],
-["Sci-Fi","Scottish author Iain M. Banks wrote which space-opera series?",["The Culture","The Expanse","Hyperion","Revelation Space"],0],
-["Sci-Fi","'Blade Runner' is based on a novel by…",["Philip K. Dick","William Gibson","Ray Bradbury","Ursula K. Le Guin"],0],
-["Sci-Fi","William Gibson's 1984 novel that popularised 'cyberspace' is…",["Neuromancer","Snow Crash","Accelerando","Ubik"],0],
-["Gaming","Which 1980 arcade game starred a yellow, dot-munching hero chased by four ghosts?",["Pac-Man","Galaxian","Frogger","Q*bert"],0],
-["Gaming","Which 1993 game by id Software popularised the first-person shooter?",["Doom","Quake","Wolfenstein 3D","Half-Life"],0],
-["Gaming","'Myst' (1993) was created by which studio?",["Cyan","Sierra","LucasArts","Bullfrog"],0],
-["Gaming","Grand Theft Auto was originally developed in which Scottish city?",["Dundee","Glasgow","Aberdeen","Edinburgh"],0],
-["Gaming","Lemmings was developed by DMA Design, based in…",["Scotland","Wales","Ireland","Cornwall"],0],
-["Gaming","In 'The Secret of Monkey Island', the hero is…",["Guybrush Threepwood","LeChuck","Roger Wilco","Manny Calavera"],0],
-["General","What is the chemical symbol for gold?",["Au","Ag","Gd","Go"],0],
-["General","Which planet has the most extreme axial tilt, appearing to roll on its side?",["Uranus","Neptune","Saturn","Mars"],0],
-["General","How many sides does a heptagon have?",["7","6","8","9"],0],
-["General","The Rosetta Stone helped decipher which writing system?",["Egyptian hieroglyphs","Linear B","Cuneiform","Mayan glyphs"],0],
-["General","Which metal is liquid at standard room temperature?",["Mercury","Gallium","Lead","Tin"],0],
-["General","What did the alchemists' 'philosopher's stone' supposedly turn base metals into?",["Gold","Silver","Diamond","Glass"],0]
-];
+var Q=(window.CASTLE_Q||[]).filter(function(q){return q&&q.a&&q.a.length===4;});
+var TOPIC_NAMES={history:"History",science:"Science & Nature",myth:"Myth & Folklore",literature:"Literature",geography:"Geography",art:"Art & Music",words:"Language & Words",medieval:"Medieval Life",astronomy:"Astronomy",games:"Games & Pop Culture",markets:"Markets & Money"};
+var HOST_TOPICS={astrologer:["astronomy"],monk:["history","medieval"],witch:["myth","science"],maiden:["literature","art"],jester:["games","words"],gargoyle:["myth","medieval"],king:["history","markets"],spinner:["words","myth"],armour:["medieval","history"],bellringer:["art","medieval"],knight:["medieval","history"]};
+var SEEN_KEY="castle_seen_q",SEEN_MAX=150;
+function loadSeen(){try{var v=JSON.parse(localStorage.getItem(SEEN_KEY)||"[]");return Array.isArray(v)?v:[];}catch(e){return [];}}
+function saveSeen(id){try{var v=loadSeen().filter(function(x){return x!==id;});v.push(id);if(v.length>SEEN_MAX)v=v.slice(v.length-SEEN_MAX);localStorage.setItem(SEEN_KEY,JSON.stringify(v));}catch(e){}}
+function buildDeck(){var recent={};loadSeen().forEach(function(id,i){recent[id]=i+1;});
+ var fresh=shuffle(Q.filter(function(q){return !recent[q.id];})),old=Q.filter(function(q){return recent[q.id];}).sort(function(x,y){return recent[x.id]-recent[y.id];});
+ return fresh.concat(old);}
+
 var JEST={
  enter:["A new chamber. Mind the cobwebs — and the questions.","The Archivist kept this room for guests he disliked.","Something in the walls is counting your steps.","Riddle me this, wanderer…","Ah, fresh meat for the catalogue!"],
  good:["Correct! The doors creak open. How disappointing.","Right you are. The Archivist nods, grudgingly.","Bah! You know things. Go on, then.","The locks yield to wisdom. Pick a door."],
@@ -136,10 +97,17 @@ function genCastle(){
 function newGame(){
  var seed=(Date.now()^Math.floor(Math.random()*1e9))>>>0;rng=mulberry(seed);
  var m=genCastle();
- S={m:m,cur:m.start,lives:5,score:0,steps:0,visited:{},solved:{},deck:shuffle(Q.map(function(_,i){return i;})),qi:0,q:null,over:false,seed:seed,face:"N",views:{},lastImg:null};
+ S={m:m,cur:m.start,lives:5,score:0,steps:0,visited:{},solved:{},deck:buildDeck(),used:{},q:null,over:false,seed:seed,face:"N",views:{},lastImg:null};
  S.visited[m.start]=1;S.intro=true;hideOverlay();renderIntro();
 }
-function nextQ(){if(S.qi>=S.deck.length){S.deck=shuffle(S.deck);S.qi=0;}var raw=Q[S.deck[S.qi++]];var o=raw[2].map(function(t,i){return{t:t,c:i===raw[3]};});return{cat:raw[0],text:raw[1],opts:shuffle(o)};}
+function nextQ(){
+ var tops=HOST_TOPICS[(room()||{}).host]||[],pickq=null,i;
+ if(tops.length&&Math.random()<0.6){for(i=0;i<S.deck.length;i++){var c=S.deck[i];if(!S.used[c.id]&&tops.indexOf(c.t)>=0){pickq=c;break;}}}
+ if(!pickq)for(i=0;i<S.deck.length;i++){if(!S.used[S.deck[i].id]){pickq=S.deck[i];break;}}
+ if(!pickq){S.used={};pickq=S.deck[0];}
+ S.used[pickq.id]=1;saveSeen(pickq.id);
+ var o=pickq.a.map(function(t,j){return{t:t,c:j===0};});
+ return{id:pickq.id,cat:TOPIC_NAMES[pickq.t]||pickq.t,text:pickq.q,opts:shuffle(o)};}
 function enter(first){
  var c=S.m.cells[S.cur];
  if(S.cur===S.m.exit){S.q=null;S.solved[S.cur]=1;say("WHAT?! You found the Archive! Touch the golden door, if you dare…");return render();}
@@ -229,6 +197,6 @@ function win(){S.over=true;S.score+=S.lives*50;hud();say("Curses! You found the 
  overlay("You reached the Archive!","Score "+S.score+" · "+S.steps+" steps (shortest path: "+S.m.len+") · "+S.lives+" lives left. The Archivist grants you a single footnote of forbidden knowledge.",["Play again",newGame]);}
 function lose(){S.over=true;say("Ha! Another soul for the stacks.");document.getElementById("quiz").innerHTML="";
  overlay("Lost in The Castle","Your lives are spent. Score "+S.score+" after "+S.steps+" steps. The jester files you under 'Miscellaneous'.",["Try again",newGame]);}
-window.__cs=function(){return S;};window.__csRender=function(){render();};window.__csApi={viewKey:viewKey,viewImg:viewImg,doorKey:doorKey,POOLS:POOLS,nb:nb,relDir:relDir};
+window.__cs=function(){return S;};window.__csRender=function(){render();};window.__csApi={viewKey:viewKey,viewImg:viewImg,doorKey:doorKey,POOLS:POOLS,nb:nb,relDir:relDir,nextQ:nextQ};
 newGame();
 })();
