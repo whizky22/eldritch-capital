@@ -93,7 +93,8 @@ function nb(c,d){return key((c.x+DIRS[d][0]+N)%N,(c.y+DIRS[d][1]+N)%N);}
 function genMaze(){
  var cells={},x,y;for(y=0;y<N;y++)for(x=0;x<N;x++)cells[key(x,y)]={x:x,y:y};
  var sx=Math.floor(rng()*N),sy=N-1,start=key(sx,sy);
- for(y=0;y<N;y++)for(x=0;x<N;x++){var ban={};[[-1,0],[0,-1],[1,0],[0,1]].forEach(function(o){var n=cells[key((x+o[0]+N)%N,(y+o[1]+N)%N)];if(n.img)ban[n.img]=1;});var pool=RNAMES.filter(function(n){return !ban[n];});cells[key(x,y)].img=pool[Math.floor(rng()*pool.length)];}
+ cells[start].img="great-hall";
+ for(y=0;y<N;y++)for(x=0;x<N;x++){if(cells[key(x,y)].img)continue;var ban={"great-hall":1};[[-1,0],[0,-1],[1,0],[0,1]].forEach(function(o){var n=cells[key((x+o[0]+N)%N,(y+o[1]+N)%N)];if(n.img)ban[n.img]=1;});var pool=RNAMES.filter(function(n){return !ban[n];});cells[key(x,y)].img=pool[Math.floor(rng()*pool.length)];}
  var dist={},q=[start];dist[start]=0;var far=start;
  while(q.length){var k=q.shift();if(dist[k]>dist[far])far=k;var c=cells[k];for(var d in exits(c)){var ak=nb(c,d);if(!(ak in dist)){dist[ak]=dist[k]+1;q.push(ak);}}}
  cells[far].img="archive-exit";
@@ -103,8 +104,8 @@ function newGame(){
  var seed=(Date.now()^Math.floor(Math.random()*1e9))>>>0;rng=mulberry(seed);
  var m=genMaze();
  S={m:m,cur:m.start,lives:5,score:0,steps:0,visited:{},solved:{},deck:shuffle(Q.map(function(_,i){return i;})),qi:0,q:null,over:false,seed:seed};
- S.visited[m.start]=1;enter(true);
- overlay("Enter the Labyrinth","The Archivist has locked his secrets deep in the castle. Answer each chamber's riddle to unlock its doors, then click a door in the scene to pass through. Every door painted in a room is a way onward: back is north, left is west, right is east, and the dungeon trapdoor drops south. The castle folds back on itself at its edges. Find the green exit. You have five lives.",["Begin",function(){hideOverlay();}]);
+ S.visited[m.start]=1;S.intro=true;hideOverlay();renderIntro();
+ if(0)overlay("Enter the Labyrinth","The Archivist has locked his secrets deep in the castle. Answer each chamber's riddle to unlock its doors, then click a door in the scene to pass through. Every door painted in a room is a way onward: back is north, left is west, right is east, and the dungeon trapdoor drops south. The castle folds back on itself at its edges. Find the green exit. You have five lives.",["Begin",function(){hideOverlay();}]);
 }
 function nextQ(){if(S.qi>=S.deck.length){S.deck=shuffle(S.deck);S.qi=0;}var raw=Q[S.deck[S.qi++]];var o=raw[2].map(function(t,i){return{t:t,c:i===raw[3]};});return{cat:raw[0],text:raw[1],opts:shuffle(o)};}
 function enter(first){
@@ -170,6 +171,19 @@ function drawMap(){
   el("rect",{x:c.x*sz+3,y:c.y*sz+3,width:sz-6,height:sz-6,rx:2,fill:cur?"#ffd86b":ex?"#3fbf7f":"#5a4a7a"},svg);
   if(v)for(var d in exits(c)){var x1=c.x*sz+10,y1=c.y*sz+10;el("line",{x1:x1+DIRS[d][0]*7,y1:y1+DIRS[d][1]*7,x2:x1+DIRS[d][0]*10,y2:y1+DIRS[d][1]*10,stroke:"#8a7aaa","stroke-width":"2"},svg);}
  }
+}
+var GATE=[53.7,56,7.5,24.7];
+function renderIntro(){
+ hud();drawMap();var svg=document.getElementById("scene");svg.innerHTML="";svg.setAttribute("viewBox","0 0 100 56.25");
+ el("image",{href:"img/castle-exterior.jpg",x:0,y:0,width:100,height:56.25,preserveAspectRatio:"none"},svg);
+ var a=el("g",{"class":"door open gate",tabindex:"0",role:"button","aria-label":"Enter the castle gate"},svg);
+ el("path",{"class":"hit"+(DEBUG?" dbg":""),d:archPath(GATE[0],GATE[1]*.5625,GATE[2],GATE[3]*.5625)},a);
+ var tt=el("title",{},a);tt.textContent="Enter the castle";
+ function go(){if(!S.intro)return;S.intro=false;enter(true);}
+ a.addEventListener("click",go);a.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}});
+ say("Knock knock, wanderer! The Archivist's castle awaits. Answer each chamber's riddle to unlock its painted doors, and find the hidden Archive. Five lives. Hee hee!","The Jester");
+ var box=document.getElementById("quiz");box.innerHTML="";var q=document.createElement("div");q.className="q";q.textContent="Click the great gate in the painting to enter. Inside, every painted door is a way onward (back = north, left = west, right = east, dungeon trapdoor = south), and the castle folds back on itself at its edges.";box.appendChild(q);
+ var b=document.createElement("button");b.className="mm-btn cta";b.textContent="Enter the castle";b.style.marginTop="10px";b.onclick=go;box.appendChild(b);
 }
 function render(){hud();drawScene();drawQuiz();drawMap();}
 function overlay(title,text,btn){var o=document.getElementById("overlay");o.innerHTML="";var h=document.createElement("h2");h.textContent=title;var p=document.createElement("p");p.textContent=text;var b=document.createElement("button");b.className="mm-btn cta";b.textContent=btn[0];b.onclick=btn[1];o.appendChild(h);o.appendChild(p);o.appendChild(b);o.classList.remove("hidden");}
