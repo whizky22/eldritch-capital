@@ -67,28 +67,10 @@
       <div class="footer-right">&copy; 2026 Eldritch Capital</div>
     </div>
 
-    <div class="subscribe-section" id="subscribe">
-      <h2>Eldritch Capital</h2>
-      <p>Esoteric investment ideas and concepts</p>
-      <form class="subscribe-form" onsubmit="handleSubscribe(event)">
-        <input type="email" placeholder="jamie@example.com" required />
-        <button type="submit">Subscribe</button>
-      </form>
-    </div>
-
     <div class="disclaimer">
       Views are my own. This is not investment advice. This venture is personal and unaffiliated with any professional role.
     </div>
   </footer>
-
-  <script>
-    function handleSubscribe(e) {
-      e.preventDefault();
-      const email = e.target.querySelector('input').value;
-      alert('Thanks for subscribing! We\'ll be in touch.');
-      e.target.reset();
-    }
-  </script>
 
 </body>
 </html>

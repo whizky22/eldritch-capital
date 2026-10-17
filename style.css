@@ -17,8 +17,6 @@
   --text-muted: #888888;
   --text-dim:   #555555;
   --border:     rgba(255,255,255,0.08);
-  --subscribe-bg:   #dedad0;
-  --subscribe-text: #0a0710;
   --accent:     #b8b4a8;
   --max-width:  1160px;
   --article-width: 680px;
@@ -307,66 +305,6 @@ img { max-width: 100%; display: block; }
   color: var(--text-dim);
 }
 
-/* Subscribe section */
-.subscribe-section {
-  background: rgba(255,255,255,0.02);
-  border-top: 1px solid var(--border);
-  text-align: center;
-  padding: 72px 40px;
-}
-
-.subscribe-section h2 {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  letter-spacing: -0.02em;
-}
-
-.subscribe-section p {
-  font-size: 16px;
-  color: var(--text-muted);
-  margin-bottom: 28px;
-}
-
-.subscribe-form {
-  display: flex;
-  max-width: 440px;
-  margin: 0 auto;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--border);
-  border-radius: 99px;
-  padding: 4px 4px 4px 20px;
-  align-items: center;
-}
-
-.subscribe-form input {
-  flex: 1;
-  background: none;
-  border: none;
-  outline: none;
-  color: var(--text);
-  font-size: 15px;
-  font-family: inherit;
-}
-
-.subscribe-form input::placeholder { color: var(--text-dim); }
-
-.subscribe-form button {
-  background: var(--subscribe-bg);
-  color: var(--subscribe-text);
-  border: none;
-  border-radius: 99px;
-  padding: 10px 22px;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 0.15s;
-  white-space: nowrap;
-}
-
-.subscribe-form button:hover { background: #cac6bc; }
-
 /* ================================================
    DISCLAIMER STRIP
    ================================================ */
@@ -426,6 +364,4 @@ img { max-width: 100%; display: block; }
   .article-title { font-size: 28px; }
 
   .site-footer-top { flex-direction: column; gap: 20px; text-align: center; padding: 32px 20px; }
-
-  .subscribe-section { padding: 48px 20px; }
 }
