@@ -1,12 +1,14 @@
 (function(){
 "use strict";
-var Q=(window.CASTLE_Q||[]).filter(function(q){return q&&q.a&&q.a.length===4;});
+function validQ(arr){return (arr||[]).filter(function(q){return q&&q.a&&q.a.length===4;});}
+var BANKS={1:validQ(window.CASTLE_Q),2:validQ(window.CASTLE_Q2),3:validQ(window.CASTLE_Q3)},MAXLEVEL=3,ROMAN=["","I","II","III","IV","V"];
 var TOPIC_NAMES={history:"History",science:"Science & Nature",myth:"Myth & Folklore",literature:"Literature",geography:"Geography",art:"Art & Music",words:"Language & Words",medieval:"Medieval Life",astronomy:"Astronomy",games:"Games & Pop Culture",markets:"Markets & Money"};
 var HOST_TOPICS={astrologer:["astronomy"],monk:["history","medieval"],witch:["myth","science"],maiden:["literature","art"],jester:["games","words"],gargoyle:["myth","medieval"],king:["history","markets"],spinner:["words","myth"],armour:["medieval","history"],bellringer:["art","medieval"],knight:["medieval","history"]};
-var SEEN_KEY="castle_seen_q",SEEN_MAX=150;
-function loadSeen(){try{var v=JSON.parse(localStorage.getItem(SEEN_KEY)||"[]");return Array.isArray(v)?v:[];}catch(e){return [];}}
-function saveSeen(id){try{var v=loadSeen().filter(function(x){return x!==id;});v.push(id);if(v.length>SEEN_MAX)v=v.slice(v.length-SEEN_MAX);localStorage.setItem(SEEN_KEY,JSON.stringify(v));}catch(e){}}
-function buildDeck(){var recent={};loadSeen().forEach(function(id,i){recent[id]=i+1;});
+var SEEN_MAX=150;
+function seenKey(lv){return lv>1?"castle_seen_q"+lv:"castle_seen_q";}
+function loadSeen(lv){try{var v=JSON.parse(localStorage.getItem(seenKey(lv))||"[]");return Array.isArray(v)?v:[];}catch(e){return [];}}
+function saveSeen(lv,id){try{var v=loadSeen(lv).filter(function(x){return x!==id;});v.push(id);if(v.length>SEEN_MAX)v=v.slice(v.length-SEEN_MAX);localStorage.setItem(seenKey(lv),JSON.stringify(v));}catch(e){}}
+function buildDeck(lv){var Q=BANKS[lv]||BANKS[1],recent={};loadSeen(lv).forEach(function(id,i){recent[id]=i+1;});
  var fresh=shuffle(Q.filter(function(q){return !recent[q.id];})),old=Q.filter(function(q){return recent[q.id];}).sort(function(x,y){return recent[x.id]-recent[y.id];});
  return fresh.concat(old);}
 
@@ -70,7 +72,8 @@ function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function shuffle(a,r){r=r||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(r()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function key(x,y){return x+","+y;}
 // Facing-relative view: the painted doors are the open exits to your left, ahead and right.
-function nb(c,d){var x=c.x+DIRS[d][0],y=c.y+DIRS[d][1];return (x<0||y<0||x>=N||y>=N)?null:key(x,y);}
+function nbRaw(c,d){var x=c.x+DIRS[d][0],y=c.y+DIRS[d][1];return (x<0||y<0||x>=N||y>=N)?null:key(x,y);}
+function nb(c,d){var k=nbRaw(c,d);return k&&S.m.cells[k]?k:null;}
 function viewKey(k,f){var c=S.m.cells[k],r={L:LEFT[f],C:f,R:RIGHT[f]},s="";["L","C","R"].forEach(function(z){if(c.d[r[z]])s+=z;});return s;}
 function relDir(z){return {L:LEFT[S.face],C:S.face,R:RIGHT[S.face]}[z];}
 function hash(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
@@ -82,30 +85,47 @@ function viewImg(){
  if(pool[i]===S.lastImg&&pool.length>1)i=(i+1)%pool.length;
  return S.views[k]=pool[i];
 }
+// Carve a random connected part of the grid (about 55-80% of cells); the rest is solid rock.
 function genCastle(){
- var cells={},x,y;for(y=0;y<N;y++)for(x=0;x<N;x++)cells[key(x,y)]={x:x,y:y,d:{}};
- function link(k,d){var c=cells[k],n=nb(c,d);if(!n)return;c.d[d]=1;cells[n].d[OPP[d]]=1;}
- var sx=1+Math.floor(rng()*(N-2)),sy=N-1,start=key(sx,sy),stack=[start],seen={};seen[start]=1;
- while(stack.length){var k=stack[stack.length-1],c=cells[k],opts=shuffle(Object.keys(DIRS),rng).filter(function(d){var n=nb(c,d);return n&&!seen[n];});
-  if(!opts.length){stack.pop();continue;}var n=nb(c,opts[0]);link(k,opts[0]);seen[n]=1;stack.push(n);}
- for(var i=0;i<3;i++){var rk=key(Math.floor(rng()*N),Math.floor(rng()*N)),rd=Object.keys(DIRS)[Math.floor(rng()*4)];link(rk,rd);}
- link(start,"W");link(start,"N");link(start,"E");
- var dist={},q=[start];dist[start]=0;var far=start;
- while(q.length){var k2=q.shift();if(dist[k2]>dist[far])far=k2;for(var d in cells[k2].d){var ak=nb(cells[k2],d);if(!(ak in dist)){dist[ak]=dist[k2]+1;q.push(ak);}}}
- return {cells:cells,start:start,exit:far,len:dist[far]};
+ for(var tries=0;tries<60;tries++){
+  var grid={},x,y;for(y=0;y<N;y++)for(x=0;x<N;x++)grid[key(x,y)]={x:x,y:y,d:{}};
+  var carved={},count=0;
+  function carve(k){if(!carved[k]){carved[k]=1;count++;}}
+  function link(k,d){var n=nbRaw(grid[k],d);if(!n)return null;grid[k].d[d]=1;grid[n].d[OPP[d]]=1;carve(k);carve(n);return n;}
+  var sx=1+Math.floor(rng()*(N-2)),sy=N-1,start=key(sx,sy);carve(start);
+  var active=[start,link(start,"W"),link(start,"N"),link(start,"E")];
+  var target=Math.round(N*N*(0.55+rng()*0.25));
+  while(active.length&&count<target){
+   var idx=rng()<0.7?active.length-1:Math.floor(rng()*active.length),k=active[idx],c=grid[k];
+   var opts=shuffle(Object.keys(DIRS),rng).filter(function(d){var n=nbRaw(c,d);return n&&!carved[n];});
+   if(!opts.length){active.splice(idx,1);continue;}
+   active.push(link(k,opts[0]));
+  }
+  var ck=Object.keys(carved);
+  for(var i=0;i<2+Math.floor(rng()*3);i++){var rk=ck[Math.floor(rng()*ck.length)],rd=Object.keys(DIRS)[Math.floor(rng()*4)],rn=nbRaw(grid[rk],rd);if(rn&&carved[rn])link(rk,rd);}
+  var cells={};ck.forEach(function(k){cells[k]=grid[k];});
+  var dist={},q=[start];dist[start]=0;var far=start;
+  while(q.length){var k2=q.shift();if(dist[k2]>dist[far])far=k2;for(var d in cells[k2].d){var ak=nbRaw(cells[k2],d);if(!(ak in dist)){dist[ak]=dist[k2]+1;q.push(ak);}}}
+  if(dist[far]>=N||tries===59)return {cells:cells,start:start,exit:far,len:dist[far],carved:ck.length,grid:N};
+ }
+}
+var SEEDP=(location.search.match(/[?&]seed=(\d+)/)||[])[1];
+function levelSeed(lv){return SEEDP?((+SEEDP)*7919+lv)>>>0:((Date.now()^Math.floor(Math.random()*4294967296))>>>0);}
+function startLevel(lv,carry){
+ N=5+lv;var seed=levelSeed(lv);rng=mulberry(seed);
+ var m=genCastle();
+ S={m:m,cur:m.start,level:lv,lives:carry?Math.min(5,carry.lives+1):5,score:carry?carry.score:0,steps:carry?carry.steps:0,visited:{},solved:{},deck:buildDeck(lv),used:{},q:null,over:false,seed:seed,face:"N",views:{},lastImg:null};
+ S.visited[m.start]=1;document.getElementById("map").setAttribute("viewBox","0 0 "+(N*20)+" "+(N*20));
 }
 function newGame(){
- var seed=(Date.now()^Math.floor(Math.random()*1e9))>>>0;rng=mulberry(seed);
- var m=genCastle();
- S={m:m,cur:m.start,lives:5,score:0,steps:0,visited:{},solved:{},deck:buildDeck(),used:{},q:null,over:false,seed:seed,face:"N",views:{},lastImg:null};
- S.visited[m.start]=1;S.intro=true;hideOverlay();renderIntro();
+ hideDeath();startLevel(1,null);S.intro=true;hideOverlay();renderIntro();
 }
 function nextQ(){
  var tops=HOST_TOPICS[(room()||{}).host]||[],pickq=null,i;
  if(tops.length&&Math.random()<0.6){for(i=0;i<S.deck.length;i++){var c=S.deck[i];if(!S.used[c.id]&&tops.indexOf(c.t)>=0){pickq=c;break;}}}
  if(!pickq)for(i=0;i<S.deck.length;i++){if(!S.used[S.deck[i].id]){pickq=S.deck[i];break;}}
  if(!pickq){S.used={};pickq=S.deck[0];}
- S.used[pickq.id]=1;saveSeen(pickq.id);
+ S.used[pickq.id]=1;saveSeen(S.level,pickq.id);
  var o=pickq.a.map(function(t,j){return{t:t,c:j===0};});
  return{id:pickq.id,cat:TOPIC_NAMES[pickq.t]||pickq.t,text:pickq.q,opts:shuffle(o)};}
 function enter(first){
@@ -133,7 +153,8 @@ function hud(){
  document.getElementById("hud-lives").textContent="Lives: "+"♥".repeat(Math.max(0,S.lives))+"♡".repeat(5-Math.max(0,S.lives));
  document.getElementById("hud-score").textContent="Score: "+S.score;
  document.getElementById("hud-steps").textContent="Steps: "+S.steps;
- document.getElementById("hud-room").textContent="Rooms found: "+Object.keys(S.visited).length+"/"+N*N;
+ document.getElementById("hud-room").textContent="Rooms found: "+Object.keys(S.visited).length+"/"+S.m.carved;
+ document.getElementById("hud-level").textContent="Level "+ROMAN[S.level];
 }
 var NS="http://www.w3.org/2000/svg";
 function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
@@ -191,12 +212,27 @@ function renderIntro(){
  var b=document.createElement("button");b.className="cs-btn cta";b.textContent="Enter the castle";b.style.marginTop="10px";b.onclick=go;box.appendChild(b);
 }
 function render(){hud();drawScene();drawQuiz();drawMap();}
-function overlay(title,text,btn){var o=document.getElementById("overlay");o.innerHTML="";var h=document.createElement("h2");h.textContent=title;var p=document.createElement("p");p.textContent=text;var b=document.createElement("button");b.className="cs-btn cta";b.textContent=btn[0];b.onclick=btn[1];o.appendChild(h);o.appendChild(p);o.appendChild(b);o.classList.remove("hidden");}
+function overlay(title,text,btn){var o=document.getElementById("overlay");o.classList.remove("level-card","victory");o.innerHTML="";var h=document.createElement("h2");h.textContent=title;var p=document.createElement("p");p.textContent=text;var b=document.createElement("button");b.className="cs-btn cta";b.textContent=btn[0];b.onclick=btn[1];o.appendChild(h);o.appendChild(p);o.appendChild(b);o.classList.remove("hidden");}
 function hideOverlay(){document.getElementById("overlay").classList.add("hidden");}
-function win(){S.over=true;S.score+=S.lives*50;hud();say("Curses! You found the Archive. The jester will remember this.");document.getElementById("quiz").innerHTML="";
- overlay("You reached the Archive!","Score "+S.score+" · "+S.steps+" steps (shortest path: "+S.m.len+") · "+S.lives+" lives left. The Archivist grants you a single footnote of forbidden knowledge.",["Play again",newGame]);}
-function lose(){S.over=true;say("Ha! Another soul for the stacks.");document.getElementById("quiz").innerHTML="";
- overlay("Lost in The Castle","Your lives are spent. Score "+S.score+" after "+S.steps+" steps. The jester files you under 'Miscellaneous'.",["Try again",newGame]);}
-window.__cs=function(){return S;};window.__csRender=function(){render();};window.__csApi={viewKey:viewKey,viewImg:viewImg,doorKey:doorKey,POOLS:POOLS,nb:nb,relDir:relDir,nextQ:nextQ};
+var LEVEL_LINES={2:"Hee hee! You thought that was the end? The castle has rearranged its bones while you slept. Deeper we go…",3:"Still alive? How tiresome. This is the oldest part of the castle. Even I don't come down here."};
+function win(){
+ S.over=true;S.score+=S.lives*50+100*S.level;hud();document.getElementById("quiz").innerHTML="";
+ if(S.level<MAXLEVEL){var nl=S.level+1,carry={lives:S.lives,score:S.score,steps:S.steps};
+  say("Curses! You found the golden door. But it only leads further in…","The Jester");
+  overlay("The Castle: Level "+ROMAN[nl],LEVEL_LINES[nl]+" (A bigger castle, harder riddles, and one life restored.)",["Enter Level "+ROMAN[nl],function(){hideOverlay();startLevel(nl,carry);enter(true);}]);
+  document.getElementById("overlay").classList.add("level-card");return;}
+ say("No! NO! You have conquered the castle. The jester will be… having words with the Archivist.","The Jester");
+ overlay("You have conquered The Castle\u2026 for now","Final score "+S.score+" \u00b7 "+S.steps+" steps \u00b7 "+S.lives+" lives left. The Archivist grants you a footnote of forbidden knowledge. More levels are being dug beneath the cellars\u2026",["Play again",newGame]);
+ document.getElementById("overlay").classList.add("victory");
+}
+function deathSound(){try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;var ac=new AC();if(ac.state==="suspended"&&ac.resume)ac.resume();var t=ac.currentTime,g=ac.createGain();g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.35,t+0.4);g.gain.exponentialRampToValueAtTime(0.0001,t+3.2);g.connect(ac.destination);
+ [55,82.4,41.2].forEach(function(f,i){var o=ac.createOscillator();o.type=i===1?"triangle":"sine";o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*0.7,t+3);o.connect(g);o.start(t);o.stop(t+3.3);});}catch(e){}}
+function lose(){
+ S.over=true;say("Ha! Another soul for the stacks.");document.getElementById("quiz").innerHTML="";
+ var d=document.getElementById("death");if(!d){d=document.createElement("div");d.id="death";d.innerHTML='<div class="band"><div class="yd">YOU DIED</div></div><button class="cs-btn cta yd-btn" type="button">Try again</button>';document.body.appendChild(d);d.querySelector(".yd-btn").onclick=newGame;}
+ document.body.classList.add("is-dead");d.classList.remove("show");void d.offsetWidth;d.classList.add("show");deathSound();
+}
+function hideDeath(){document.body.classList.remove("is-dead");var d=document.getElementById("death");if(d)d.classList.remove("show");}
+window.__cs=function(){return S;};window.__csRender=function(){render();};window.__csApi={genSample:function(lv){var oN=N,oR=rng;N=5+lv;rng=mulberry(levelSeed(lv));var m=genCastle();N=oN;rng=oR;return m;},jumpExit:function(){S.cur=S.m.exit;S.visited[S.cur]=1;enter(false);},banks:BANKS,level:function(){return S.level;},viewKey:viewKey,viewImg:viewImg,doorKey:doorKey,POOLS:POOLS,nb:nb,relDir:relDir,nextQ:nextQ};
 newGame();
 })();

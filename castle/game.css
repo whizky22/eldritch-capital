@@ -1,3 +1,4 @@
+@import url('https://fonts.bunny.net/css?family=cinzel:400,700');
 .cs-wrap{max-width:760px;margin:0 auto;padding:16px 14px 40px}
 .cs-title{font-family:Georgia,serif;color:#d4af37;text-align:center;font-size:clamp(22px,6vw,34px);margin:8px 0 10px;letter-spacing:.5px}
 .cs-hud{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;font-size:14px;color:#c9b67a;margin-bottom:8px}
@@ -47,3 +48,20 @@
 
 .cs-turn{display:block;margin:12px auto 0;background:none;border:none;color:#6b4a22;font-family:Georgia,serif;font-size:14px;text-decoration:underline;cursor:pointer;min-height:36px;padding:6px 12px}
 .cs-turn:hover{color:#7a1f1f}
+
+/* level card / victory */
+.cs-overlay.level-card h2,.cs-overlay.victory h2{font-family:Cinzel,'Trajan Pro',Georgia,serif;letter-spacing:2px}
+.cs-overlay.victory h2{color:#ffe08a;text-shadow:0 0 12px rgba(255,200,90,.5)}
+/* YOU DIED */
+body.is-dead .cs-wrap,body.is-dead .site-nav,body.is-dead footer{filter:grayscale(1) brightness(.45);transition:filter 2.5s ease}
+#death{position:fixed;inset:0;z-index:1000;display:none;pointer-events:none}
+#death.show{display:block;pointer-events:auto}
+#death .band{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:clamp(110px,24vh,220px);background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.78) 18%,rgba(0,0,0,.78) 82%,rgba(0,0,0,0) 100%);display:flex;align-items:center;justify-content:center;opacity:0}
+#death.show .band{animation:ydband 1.2s ease-out forwards}
+#death .yd{font-family:Cinzel,'Trajan Pro','Times New Roman',serif;font-weight:400;color:#8a0a0a;font-size:clamp(40px,11vw,104px);letter-spacing:.18em;padding-left:.18em;text-shadow:0 0 18px rgba(120,0,0,.55);opacity:0;transform:scale(.9)}
+#death.show .yd{animation:ydtext 2.8s ease-out .3s forwards}
+#death .yd-btn{position:absolute;left:50%;top:calc(50% + clamp(80px,15vh,140px));transform:translateX(-50%);opacity:0;text-align:center;min-width:160px}
+#death.show .yd-btn{animation:ydbtn 1s ease-out 3s forwards}
+@keyframes ydband{to{opacity:1}}
+@keyframes ydtext{0%{opacity:0;transform:scale(.9)}100%{opacity:1;transform:scale(1.04)}}
+@keyframes ydbtn{to{opacity:1}}
