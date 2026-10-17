@@ -229,7 +229,7 @@ function deathSound(){try{var AC=window.AudioContext||window.webkitAudioContext;
  [55,82.4,41.2].forEach(function(f,i){var o=ac.createOscillator();o.type=i===1?"triangle":"sine";o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*0.7,t+3);o.connect(g);o.start(t);o.stop(t+3.3);});}catch(e){}}
 function lose(){
  S.over=true;say("Ha! Another soul for the stacks.");document.getElementById("quiz").innerHTML="";
- var d=document.getElementById("death");if(!d){d=document.createElement("div");d.id="death";d.innerHTML='<div class="band"><div class="yd">YOU DIED</div></div><button class="cs-btn cta yd-btn" type="button">Try again</button>';document.body.appendChild(d);d.querySelector(".yd-btn").onclick=newGame;}
+ var d=document.getElementById("death");if(!d){d=document.createElement("div");d.id="death";d.innerHTML='<div class="band"><div class="lf">THE LIGHT FADES</div></div><button class="cs-btn cta lf-btn" type="button">Try again</button>';document.body.appendChild(d);d.querySelector(".lf-btn").onclick=newGame;}
  document.body.classList.add("is-dead");d.classList.remove("show");void d.offsetWidth;d.classList.add("show");deathSound();
 }
 function hideDeath(){document.body.classList.remove("is-dead");var d=document.getElementById("death");if(d)d.classList.remove("show");}
